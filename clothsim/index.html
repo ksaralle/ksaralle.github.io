@@ -1,0 +1,499 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<style>
+
+
+
+@import url('https://fonts.googleapis.com/css2?family=Cuprum&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Advent+Pro:wght@100&family=Cuprum&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Advent+Pro:wght@100&family=Cuprum&family=Gochi+Hand&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Advent+Pro:wght@100&family=Cuprum&family=Gochi+Hand&family=Raleway:wght@100&display=swap');
+
+  .four{
+    padding:30px;
+  }
+  *{
+      font-family: 'Raleway', sans-serif;
+  }
+  body {
+    padding-top: 100px;
+    padding-bottom: 100px;
+    text-align: left;
+    font-weight: 100;
+    font-size: 5;
+    color: #121212;
+  }
+  /* texts */
+  h1, h2 {
+    font-size: 40px;
+  }
+  h1, h2 {
+    padding: 20px;
+  }
+  h3, h4 {
+    padding: 30px;
+  }
+  .regular-text {
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-top:20px;
+    padding-bottom: 20px;
+    line-height: 2;
+    font-size:17px;
+  }
+  .list{
+    line-height:2;
+    margin-left: 70px;
+    margin-right: 70px;
+    padding-left: 100px;
+    padding-right: 100px;
+    font-size:17px;
+  }
+  .footnote {
+    padding-bottom:20px;
+    font-size: 14px;
+  }
+  /* images */
+  .gallery {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 80px;
+    margin-bottom: 80px;
+  }
+  .small-gallery-container {
+      margin-top: 40px;
+      margin-bottom: 30px;
+  }
+  .large-gallery-container {
+    margin-top: 50px;
+    margin-bottom: 50px;
+  }
+  .grid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .inline-image {
+    width: 33.3%;
+    text-align: center;
+  }
+  .inline-image-4 {
+    width: 25%;
+    text-align: center;
+  }
+  .inline-image-5 {
+    width: 20%;
+    text-align: center;
+  }
+  .image-container {
+    width: 40%;
+    text-align: center;
+    align-content: center;
+  }
+  .lecture {
+    margin-left: 100px;
+    margin-right: 20px;
+    text-align: center;
+  }
+
+
+
+</style>
+<title>CS 184 Cloth Simulation</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link href="https://fonts.googleapis.com/css?family=Open+Sans|Source+Sans+Pro" rel="stylesheet">
+</head>
+
+
+<body>
+<h1 align="middle">CS 184: Computer Graphics and Imaging, Spring 2022</h1>
+  <h1 align="middle">Project 4: Cloth Simulation</h1>
+<p class="regular-text" align="middle">"Throughout the history of computer graphics, many different cloth models have been developed for simulation. Of these, one of the simplest models uses a system of point masses and springs."</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="inline-image">
+      <img src="images/part5/texture5.png" width=100% height="450px">
+    </div>
+    <div class="inline-image">
+      <img src="images/part5/texture4.png" width=100% height="450px">
+    </div>
+    <div class="inline-image">
+      <img src="images/part5/texture3.png" width=100% height="450px">
+    </div>
+  </div>
+</div>
+<p  class="regular-text" align="middle">Sara Wang, CS184-abe</p>
+<br><br>
+<div>
+<h2 align="middle">Overview</h2>
+<p class="regular-text" >
+  In this project, I implemented the simulation of cloth using the model of point masses and strings. The model is essentially using some desired dimensions and parameters, divide up the cloth into evenly distributed point masses, and connect nearby point masses with springs. The simulation I present in this project also involves cloth collisions with other objects (spheres and plane), and collisions with itself. At the end, I implemented a basic shader program in GLSL that gives the cloth a realistic fabric outlook.
+</p>
+
+
+
+
+<h2 align="middle">Part I: Masses and Springs</h2>
+<p class="regular-text" >In part 1, I created an evenly spaced grid of masses and the interconnected springs. It is worthy to note that some of the point masses are pinned, some are not. There are three types of constraint for springs: structural, shearing and bending constraints, each of them restrain the cloth in different behaviors.
+</p>
+<p class="regular-text" >Below are screenshots of the model of point masses and springs of pinned2.json.
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="inline-image">
+      <img src="images/part1/1.png" width=100%>
+    </div>
+    <div class="inline-image">
+      <img src="images/part1/2.png" width=100%>
+    </div>
+    <div class="inline-image">
+      <img src="images/part1/3.png" width=100%>
+    </div>
+  </div>
+</div>
+<p class="regular-text" >Below images illustrate different types of spring constraints: this is how wireframe looks like (1) without any shearing constraints, (2) with only shearing constraints, and (3) with all constraints.
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="inline-image">
+      <img src="images/part1/without_shearing.png" width=100%>
+      <p class="footnote">without shearing constraints</p>
+    </div>
+    <div class="inline-image">
+      <img src="images/part1/only_shearing.png" width=100%>
+      <p class="footnote">only shearing constraints</p>
+    </div>
+    <div class="inline-image">
+      <img src="images/part1/all_constraints.png" width=100%>
+      <p class="footnote">all constraints</p>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<h2 align="middle">Part II: Simulation via Numerical Integration</h2>
+<p class="regular-text" >In the second part, I implemented the animated simulation of cloth,
+  specifically the cloth behaviors after forces have been applied on it.
+</p>
+<p class="regular-text" >For the scope of this project, I’m only taking into account the effects of gravity, which acts on each point mass uniformly, and the spring correction forces, which constrain the connected point masses from being too far apart.
+The implementation of simulation is first calculating the forces applied to each individual point masses, using Verlet integration to compute new point pass positions for each time step, and lastly constrain position updates to keep springs from being unreasonably deformed. For point masses that are pinned, don’t do anything.
+</p>
+<p class="regular-text" >The simulation effects vary when parameters are changed.
+  Specifically, when I change spring constant ks, the cloth material appears to be soft at low ks, and hard at high ks.
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="inline-image">
+      <img src="images/part2/ks_1000.png" width=100% height="400px">
+      <p class="footnote">ks = 1000</p>
+    </div>
+    <div class="inline-image">
+      <img src="images/part2/ks_5000.png" width=100% height="400px">
+      <p class="footnote">ks = 5000</p>
+    </div>
+    <div class="inline-image">
+      <img src="images/part2/ks_10000.png" width=100% height="400px">
+      <p class="footnote">ks = 10000</p>
+    </div>
+  </div>
+</div>
+<p class="regular-text" >Changing density from low to high: the cloth at low density looks like a paper (hard), whereas at high density looks like silk (soft).
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="inline-image">
+      <img src="images/part2/density_3.png" width=100% height="400px">
+      <p class="footnote">density = 3</p>
+    </div>
+    <div class="inline-image">
+      <img src="images/part2/density_15.png" width=100% height="400px">
+      <p class="footnote">density = 15</p>
+    </div>
+    <div class="inline-image">
+      <img src="images/part2/density_50.png" width=100% height="400px">
+      <p class="footnote">density = 50</p>
+    </div>
+  </div>
+</div>
+<p class="regular-text" >Changing the damping factor from low to high, the cloth's falling motion becomes much slower because there is increasing friction countering the fall.
+  There are a lot more folds at low damping factors.
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="inline-image">
+      <img src="images/part2/damping_0.png" width=100% height="400px">
+      <p class="footnote">damping = 0.0</p>
+    </div>
+    <div class="inline-image">
+      <img src="images/part2/damping_0.5.png" width=100% height="400px">
+      <p class="footnote">damping = 0.5</p>
+    </div>
+    <div class="inline-image">
+      <img src="images/part2/damping_1.png" width=100% height="400px">
+      <p class="footnote">damping = 1.0</p>
+    </div>
+  </div>
+</div>
+<p class="regular-text" >Below is a shaded cloth from pinned4.json in it final resting state.
+</p>
+<div class="small-gallery-container">
+  <div class="grid">
+    <div class="inline-image">
+      <img src="images/part2/pinned4.png" width=100%>
+      <p class="footnote">pinned4.json at restful state</p>
+    </div>
+  </div>
+</div>
+
+
+
+<h2 align="middle">Part III: Handling Collisions with Other Projects</h2>
+<p class="regular-text" >In part 3, I implemented the collision effects when cloth collides with another object. The logic of collision handling is that for each point mass, check if it position intersects with or is “inside” another object. If so, adjust its position to the surface of the object.
+</p>
+<p class="regular-text" >This part includes collision with spheres and planes. Below are images showing a shaded cloth colliding with a sphere, the cloth in its final resting state on the sphere.
+  For different spring constants ks, the results look different. In particular, at low ks, the cloth looks softer in material (more folds, due to the pull of gravity); at high ks, the cloth look hard and there are a lot less folds.
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="inline-image">
+      <img src="images/part3/ks_500.png" width=100% height="450px">
+      <p class="footnote">ks = 500</p>
+    </div>
+    <div class="inline-image">
+      <img src="images/part3/ks_5000.png" width=100% height="450px">
+      <p class="footnote">ks = 5000</p>
+    </div>
+    <div class="inline-image">
+      <img src="images/part3/ks_50000.png" width=100% height="450px">
+      <p class="footnote">ks = 50000</p>
+    </div>
+  </div>
+</div>
+<p class="regular-text" >Below is an image showing a shaded cloth lying peacefully at rest on the plane.
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="inline-image">
+      <img src="images/part3/plane1.png" width=100% height="450px">
+    </div>
+    <div class="inline-image">
+      <img src="images/part3/plane2.png" width=100% height="450px">
+    </div>
+    <div class="inline-image">
+      <img src="images/part3/plane3.png" width=100% height="450px">
+    </div>
+  </div>
+</div>
+
+
+<h2 align="middle">Part IV: Handling Self-collisions</h2>
+<p class="regular-text" >Up till this part, the cloth cannot correctly falls on itself, because it folds on itself and behave strangely. To avoid the unwanted effects, I implemented the cloth’s self-collisions behaviors.
+</p>
+<p class="regular-text" >To efficiently solve this problem, we first use spatial hashing to partition the space into 3D boxes, where point mass is mapped to a 3D box based on it position. Then, for every point mass, we search in its corresponding 3D box to see if there is any other point mass that is too close to it (within 2*thickness apart), and call it self-collision. In the case where self-collision is detected, we add a correction vector to the point mass(es) that adjust their distance to an appropriate value.
+</p>
+<p class="regular-text" >After self-collision has been implemented, I can see the cloth folding on itself, and gradually flattening itself after completely landing ont the plane, as opposed to clipping through itself like before.
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="inline-image-5">
+      <img src="images/part4/2.png" width=100% height=350px>
+    </div>
+    <div class="inline-image-5">
+      <img src="images/part4/3.png" width=100% height=350px>
+    </div>
+    <div class="inline-image-5">
+      <img src="images/part4/4.png" width=100% height=350px>
+    </div>
+    <div class="inline-image-5">
+      <img src="images/part4/5.png" width=100% height=350px>
+    </div>
+    <div class="inline-image-5">
+      <img src="images/part4/6.png" width=100% height=350px>
+    </div>
+  </div>
+</div>
+<p class="regular-text" > Document how your cloth falls and folds on itself, starting with an early, initial self-collision and ending with the cloth at a more restful state
+  (even if it is still slightly bouncy on the ground).
+</p>
+  <p class="regular-text" > The cloth behaves slightly different when the density value and spring constant ks changes. As density goes down, or ks goes up,
+the cloth appears to be more increasingly rigid and hard. As density does up, or ks goes down, the cloth becomes more like liquid and apparently softer. </p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="inline-image">
+      <img src="images/part4/density_1.png" width=100% height="350px">
+      <p class="footnote">density = 1</p>
+    </div>
+    <div class="inline-image">
+      <img src="images/part4/density_15.png" width=100% height="350px">
+      <p class="footnote">density = 15</p>
+    </div>
+    <div class="inline-image">
+      <img src="images/part4/density_50.png" width=100% height="350px">
+      <p class="footnote">density = 50</p>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="inline-image">
+      <img src="images/part4/ks_500.png" width=100% height="350px">
+      <p class="footnote">ks = 500</p>
+    </div>
+    <div class="inline-image">
+      <img src="images/part4/ks_5000.png" width=100% height="350px">
+      <p class="footnote">ks = 5000</p>
+    </div>
+    <div class="inline-image">
+      <img src="images/part4/ks_50000.png" width=100% height="350px">
+      <p class="footnote">ks = 50000</p>
+    </div>
+  </div>
+</div>
+
+
+
+<h2 align="middle">Part V: Shaders</h2>
+<p class="regular-text" >In part 5, I implemented a couple of shader programs. Shaders are programs that runs on their own on GPU, isolated in the sense that they are not communicating with other programs but are only transforming inputs to outputs for the rendering pipeline.
+</p>
+<p class="regular-text" >We implemented two shader types for each program: vertex shaders and fragment shaders. Vertex shaders are called once per vertex to calculate the coordinates of objects (output via gl_position). The outputs of vertex shaders are passed on to fragment shaders. Fragment shaders are called per “fragment” (oftentimes fragment = pixel) taking in outputs from vertex shaders and computing the color for each fragment.
+</p>
+<p class="regular-text" >Diffuse shading model simulates the reflection of light uniformly to all outgoing directions. Below are results produced by diffuse shading program.
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="inline-image-4">
+      <img src="images/part5/diffuse1.png" width=100% height=350px>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part5/diffuse2.png" width=100% height=350px>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part5/diffuse3.png" width=100% height=350px>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part5/diffuse4.png" width=100% height=350px>
+    </div>
+  </div>
+</div>
+<p class="regular-text" >The Blinn-Phong shading model is a way of shading 3D objects that renders a considerably realistic look. The overall lighting color for a fragment is ambient, diffuse and specular lightings combined, which to a very large extent resembles real world visualizations.
+</p>
+<p class="regular-text" >The below images are results of using Blinn-Phong shader programs, outputting only the ambient component, outputting only the diffuse component, outputting only the specular components and the sum of all three combined.
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="inline-image-4">
+      <img src="images/part5/phong_ambient.png" width=100% height=350px>
+      <p class="footnote">ambient lighting</p>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part5/phong_diffuse.png" width=100% height=350px>
+      <p class="footnote">diffuse lighting</p>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part5/phong_specular.png" width=100% height=350px>
+      <p class="footnote">specular lighting</p>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part5/phong_overall.png" width=100% height=350px>
+      <p class="footnote">combined</p>
+    </div>
+  </div>
+</div>
+<p class="regular-text" >Texture shading program is sampling the color for the fragment from a given texture at a specific texture space coordinate. Below is the results produced by texture mapping shader using my own custom texture.
+</p>
+<div class="small-gallery-container">
+  <div class="grid">
+    <div class="inline-image">
+      <img src="images/part5/texture1.png" width=100%>
+      <p class="footnote">custom texture floral</p>
+    </div>
+  </div>
+</div>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="inline-image">
+      <img src="images/part5/texture5.png" width=100% height="450px">
+    </div>
+    <div class="inline-image">
+      <img src="images/part5/texture4.png" width=100% height="450px">
+    </div>
+    <div class="inline-image">
+      <img src="images/part5/texture3.png" width=100% height="450px">
+    </div>
+  </div>
+</div>
+<p class="regular-text"></p>
+<p class="regular-text" >Below are results produced by bumping mapping and displacement mapping using the same texture.
+  Bumping mapping and displacement mapping encodes a height map in a texture to be processed and applied by a shader program. In bumping mapping we simulate the texture color, whereas in displacement mapping we simulate both the texture color and the vertex coordinates to render a more realistic “bumpy” look.
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/part5/bump_sphere_128.png" width="70%" height="400px">
+        <p class="footnote">bumping mapping, [-a 128 -o 128]</p>
+    </div>
+    <div class="image-container">
+        <img src="images/part5/bump_cloth_128.png" width="70%" height="400px">
+        <p class="footnote">bumping mapping, [-a 128 -o 128]</p>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/part5/displacement_sphere_128.png" width="70%" height="400px">
+        <p class="footnote">displacement mapping, [-a 128 -o 128]</p>
+    </div>
+    <div class="image-container">
+        <img src="images/part5/displacement_cloth_128.png" width="70%" height="400px">
+        <p class="footnote">displacement mapping, [-a 128 -o 128]</p>
+    </div>
+  </div>
+</div>
+
+<p class="regular-text">The results render a little bit differently at coarser and finer resolution levels, especially for displacement mapping where there is visible difference.
+  At [-a 128 -o 128], as shown above, the bumps are realistic and considerably accurate in regards to simulate the texture object.
+   However, at [-a 16 -o 16], the bumps are way too dramatic so that they seem unreal.</p>
+
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/part5/bump_sphere_16.png" width="70%" height="400px">
+        <p class="footnote">bumping mapping, [-a 16 -o 16]</p>
+    </div>
+    <div class="image-container">
+        <img src="images/part5/bump_cloth_16.png" width="70%" height="400px">
+        <p class="footnote">bumping mapping, [-a 16 -o 16]</p>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/part5/displacement_sphere_16.png" width="70%" height="400px">
+        <p class="footnote">displacement mapping, [-a 16 -o 16]</p>
+    </div>
+    <div class="image-container">
+        <img src="images/part5/displacement_cloth_16.png" width="70%" height="400px">
+        <p class="footnote">displacement mapping, [-a 16 -o 16]</p>
+    </div>
+  </div>
+</div>
+
+<p class="regular-text" >Lastly, the mirror shader program is implemented by calculating the reflection of the viewing vector across the surface normal of the fragment. This is a simple model for a mirror material, where all the colors are sampled from the "environment". Below are results produced using the mirror shader.
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/part5/mirror_sphere.png" width="70%" height="400px">
+        <p class="footnote">sphere</p>
+    </div>
+    <div class="image-container">
+        <img src="images/part5/mirror_cloth.png" width="70%" height="400px">
+        <p class="footnote">cloth</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

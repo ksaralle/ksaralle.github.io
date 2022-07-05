@@ -1,0 +1,547 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<style>
+
+
+
+@import url('https://fonts.googleapis.com/css2?family=Cuprum&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Advent+Pro:wght@100&family=Cuprum&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Advent+Pro:wght@100&family=Cuprum&family=Gochi+Hand&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Advent+Pro:wght@100&family=Cuprum&family=Gochi+Hand&family=Raleway:wght@100&display=swap');
+
+  .four{
+    padding:30px;
+  }
+
+  *{
+      font-family: 'Raleway', sans-serif;
+
+  }
+  body {
+    padding-top: 100px;
+    padding-bottom: 100px;
+    text-align: left;
+    font-weight: 100;
+    font-size: 5;
+    color: #121212;
+  }
+  /* texts */
+  h1, h2, h3, h4 {
+    font-size: 40px;
+  }
+  h1, h2 {
+    padding: 20px;
+  }
+  h3, h4 {
+    padding: 30px;
+  }
+  .regular-text {
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-top:20px;
+    padding-bottom: 20px;
+    line-height: 2;
+    font-size:17px;
+  }
+  .list{
+    line-height:2;
+    margin-left: 70px;
+    margin-right: 70px;
+    padding-left: 100px;
+    padding-right: 100px;
+    font-size:17px;
+  }
+  .footnote {
+    padding-bottom:20px;
+    font-size: 14px;
+  }
+  /* images */
+  .gallery {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 80px;
+    margin-bottom: 80px;
+  }
+
+  .small-gallery-container {
+      margin-top: 40px;
+      margin-bottom: 30px;
+  }
+
+  .large-gallery-container {
+    margin-top: 50px;
+    margin-bottom: 50px;
+  }
+
+  .grid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .inline-image {
+    width: 33.3%;
+    text-align: center;
+  }
+  .inline-image-4 {
+    width: 25%;
+    text-align: center;
+  }
+  .inline-image-5 {
+    width: 20%;
+    text-align: center;
+  }
+
+  .image-container {
+    width: 40%;
+    text-align: center;
+    align-content: center;
+  }
+
+  .lecture {
+    margin-left: 100px;
+    margin-right: 20px;
+    text-align: center;
+  }
+
+
+
+</style>
+<title>CS 184 PathTracer</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link href="https://fonts.googleapis.com/css?family=Open+Sans|Source+Sans+Pro" rel="stylesheet">
+</head>
+
+
+<body>
+<h1 align="middle">CS 184: Computer Graphics and Imaging, Spring 2022</h1>
+  <h1 align="middle">Project 3-1: PathTracer</h1>
+<p class="regular-text" align="middle">"By the time you are done, you'll be able to generate some realistic pictures (given enough patience and CPU time). You will also have the chance to extend the assignment in many technically challenging and intellectually stimulating directions."</p>
+<div class="gallery">
+  <img src="images/part3/hemisphere-sampling/debug.png" width=100%>
+  <img src="images/part3/hemisphere-sampling/debug.png" width=100%>
+  <img src="images/part3/hemisphere-sampling/debug.png" width=100%>
+</div>
+<p  class="regular-text" align="middle">Sara Wang, CS184-abe</p>
+
+<br><br>
+
+<div>
+<h2 align="middle">Overview</h2>
+<p class="regular-text" >In this project, I implemented various computer graphics techniques of 3D scene rendering, features that supports direct illumination and global illumination.
+Process includes generating sample rays from camera to objects in the scene, efficiently detecting ray-object intersections using Bounding Volume Hierarchy, and using Monte Carlo Estimator to simulate realistic lightings on diffuse surfaces.
+Lastly, I applied adaptive sampling scheme to optimize the performance of the sampling procedure.
+</p>
+
+
+
+
+<h2 align="middle">Part I: Ray Generation and Scene Intersection</h2>
+
+<p class="regular-text" >To render an image of a scene, we find a way to determine the appropriate color for each pixel on the screen.
+</p>
+<p class="regular-text" >First of all, we create a camera space to visualize the scene; every object from the world space is transformed to camera space using an accurate coordinate transform matrix. The 2d screen where we want to render the image is placed as a sensor plane in the camera world. We imagine that numerous rays are shot from the camera origin, passing through a pixel (x, y) of the screen sensor plane, and land on a color  in the scene (can be the background or an object where intersection occurs ). We should determine that, for the ray, whether an intersection occurs, what objects will be intersected and what the closest intersection point is.
+</p>
+<p class="regular-text" >The intersections point will be the max traveling depth of the ray and we say that the ray land on a color for pixel (x, y).
+</p>
+<div class="small-gallery-container">
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/part1/task1.2/banana.png" width="90%">
+        <p class="footnote">banana.dae</p>
+    </div>
+    <div class="image-container">
+        <img src="images/part1/task1.2/CBempty.png" width="90%">
+        <p class="footnote">CBempty.dae</p>
+    </div>
+  </div>
+</div>
+<p class="regular-text" > The RGB values at each pixel are direct visualization of the direction of camera ray(s) through that pixel in the world space (X mapped to red, Y mapped to green, Z mapped to blue)
+</p>
+<div class="small-gallary-container">
+  <div class="grid">
+    <img src="images/part1/task1.3/moller-trumbore.png" width=70%>
+  </div>
+</div>
+<p class="regular-text" >I used Moller Trumbore Algorithm to determine the intersection of a ray to a triangle.
+</p>
+<p class="regular-text" >Assume there’s an intersection point P within the triangle and represent it in barycentric coordinates of the triangle vertices b0 * p0 + b1 * p1 + b2 * p2. Represent the ray as O + tD.
+</p>
+<p class="regular-text" >Intersection is when the two representations equates, and we solve the equation for t. The equation can be optimized to Moller Trumbore equation as shown in the lecture slide below. If t  >= 0, then we have a valid intersection. (of course, t will need to be in range of t_min and t_max). Modify t_max value of the ray object to t of intersection because the ray will stop at the intersection point.
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="inline-image">
+      <img src="images/part1/task1.4/banana.png" width=100%>
+      <p class="footnote">banana.dae</p>
+    </div>
+    <div class="inline-image">
+      <img src="images/part1/task1.4/bench.png" width=100%>
+      <p class="footnote">bench.dae</p>
+    </div>
+    <div class="inline-image">
+      <img src="images/part1/task1.4/CBgems.png" width=100%>
+      <p class="footnote">CBgems.dae</p>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="inline-image">
+      <img src="images/part1/task1.4/CBspheres.png" width=100%>
+      <p class="footnote">CBspheres.dae</p>
+    </div>
+    <div class="inline-image">
+      <img src="images/part1/task1.3/CBempty.png" width=100%>
+      <p class="footnote">CBempty.dae</p>
+    </div>
+    <div class="inline-image">
+      <img src="images/part1/task1.4/teapot.png" width=100%>
+      <p class="footnote">teapot.dae</p>
+    </div>
+  </div>
+</div>
+<p class="regular-text" >Using the algorithm for detecting ray-triangle and ray-sphere intersections, I am able to produce rendering results with normal shading for a few small .dae files, as shown above.
+</p>
+
+
+
+
+
+<h2 align="middle">Part II: Bounding Volume Hierarchy</h2>
+<p class="regular-text" >When there are too many primitives in the scene, performing an exhaustive check on every one of them becomes inefficient and inadequate. Therefore we use a better scheme where we smartly divide the objects into partitions, and keep dividing the partitions into smaller partitions until there are few enough objects in it. The partitions are represented in a tree data structure of BVH nodes, where each partition divide the objects in two according to some heuristics.
+</p>
+<p class="regular-text" >The first part of the implementation is the construction of BVH nodes. I iterate through every primitive and use the centroid point of each primitive to compute a centroid bounding box, in order to get a snapshot of the object’s distribution. The axis where the centroid box spans the longest is the axis I choose to split for the next partition. I used the centroid point of the centroid box to divide all primitives into a “left” and “right” collection by comparing the box centroid to their centroid. By doing this recursively, I have a binary tree structure.
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="inline-image-4">
+      <img src="images/part2/bvh/1.png" width=100% height=300px>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part2/bvh/2.png" width=100% height=300px>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part2/bvh/3.png" width=100% height=300px>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part2/bvh/4.png" width=100% height=300px>
+    </div>
+  </div>
+</div>
+<p class="regular-text" >With BVH nodes,  the runtime of testing and getting the closest intersection of a ray with primitives in the scene is greatly improved. If the ray does not intersect with bounding box of the current node, we exit immediately. If the ray does intersect, then based on whether or not this is a leaf node, we either perform an exhaustive search on the few objects of the node, or recursively call the intersection test on left and right child, and return the closest intersection. The optimization large enhance the runtime performance.
+</p>
+<p class="regular-text" >
+ Below shows images with normal shading of some large .dae files that can only be rendered with BVH acceleration within reasonable time.
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="inline-image-4">
+      <img src="images/part2/large/CBdragon.png" width=100% height=300px>
+      <p class="footnote">100012 primitives, Rendering... 100%! (0.0642s)</p>
+      <p class="footnote">CBdragon.dae</p>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part2/large/CBlucy.png" width=100% height=300px>
+      <p class="footnote">133796 primitives, Rendering... 100%! (0.0610s)</p>
+      <p class="footnote">CBlucy.dae</p>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part2/large/maxplanck.png" width=100% height=300px>
+      <p class="footnote">50801 primitives, Rendering... 100%! (0.1370s)</p>
+      <p class="footnote">maxplanck.dae</p>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part2/large/wall-e.png" width=100% height=300px>
+      <p class="footnote">240326 primitives, Rendering... 100%! (0.1132s)</p>
+      <p class="footnote">wall-e.dae</p>
+    </div>
+  </div>
+</div>
+<p class="regular-text" >The great improvement in runtime is evident when running extremely large and moderately large .dae files. Below shows the comparison of running cow.dae, bunny.dae and bench.dae, with and without using BVH node construction.
+</p>
+<div class="small-gallery-container">
+  <ul class="list">
+    <li>
+      <div class="grid">
+        <div class="inline-image"><img src="images/part2/comparison/cow.png" width="300px"></div>
+        <p class="regular-text">For cow.dae, 5856 primitives, rendering time is reduced from 32.6376s to 0.1140s, (average) 2683.805085 to 3.151755 intersection tests per ray.</p>
+      </div>
+    </li>
+    <li>
+      <div class="grid">
+        <div class="inline-image"><img src="images/part2/comparison/bunny.png" width="300px"></div>
+        <p class="regular-text">For bunny.dae, 33696 primitives, rendering time is reduced from 304.8879s to 0.1037s, (average) 21002.686658 to 2.260783 intersection tests per ray.</p>
+      </div>
+    </li>
+    <li>
+      <div class="grid">
+        <div class="inline-image"><img src="images/part2/comparison/bench.png" width="300px"></div>
+        <p class="regular-text">For bench.dae, 67808 primitives, rendering time is reduced from 518.5917s to 0.0502s, (average) 35480.262241 to 0.633395 intersection tests per ray.</p>
+      </div>
+    </li>
+    <li>
+      <p class="regular-text">
+        All of the data above shows we can avoid a lot of intersection tests with BVH nodes, resulting in a significant enhancement in the implementation’s  time performance.
+      </p>
+    </li>
+  </ul>
+</div>
+
+
+
+
+
+
+<h2 align="middle">Part III: Direct Illumination</h2>
+<p class="regular-text" >Following previously established base logic, we first casts numerous rays from camera to the scene and observe where the ray land on, an object or a wall. We refer to them as intersection points, and we will try to compute the colors at each intersection points as accurately as possible.
+</p>
+<p class="regular-text" >The goal is to find all the lights (from direct source) arriving at the intersection points, calculate how much of each is reflected by the surface according to the reflectance value (that is to be calculated too) and return the sum of outgoing lights. However, since we cannot integrate over directions in reality, we can only do this by generating a sample pool of incoming directions for each primary intersection point and use Monte Carlo Estimation to approximate the integral. (For this part, we are only dealing with diffuse surfaces, which means the reflectance for a point remains a constant no matter the incoming and outgoing directions.)
+</p>
+<div class="small-gallery-container">
+  <div class="grid">
+      <img src="images/part3/monte-carlo.png" width=50%>
+  </div>
+</div>
+<p class="regular-text" >The goal is to integrate over all incoming directions or the next best thing, to get an estimate of that.
+</p>
+<p class="regular-text" >In this part, I implemented two methods for direct lighting, which traces how much light arrives at a point by the zero-bounce reflection and one-bounce reflection. Zero-bounce reflection traces the light directly emitted from a point, so only the light sources would have a non-black value. One-bounce reflection estimates the light getting reflected from another point by up to 1 bounce. To tracks the one-bounce lightings, we need to estimate how much light arrives at the point from elsewhere.
+</p>
+<div class="small-gallery-container">
+  <div class="grid">
+    <div class="inline-image">
+      <img src="images/part3/zero_bounce/CBbunny.png" width=100%>
+      <p class="footnote">zero-bounce radiance of CBbunny.dae</p>
+    </div>
+  </div>
+</div>
+<p class="regular-text" >The first sampling method is Uniform Hemisphere Sampling. I used the Cosine Weighted 3d Hemisphere Sampler to generate incoming directions in spherical coordinates, outputs are Vector3D objects representing (distance, theta, phi). For each incoming direction wi, I used the primary intersection point hit_p and wi to create a new ray, which is a ray shooting from hit_p to somewhere else in the scene, and test if it intersect with any light source in the scene, light source being a surface that has a positive emission. With a fair amount of samples, I used the Monte Carlo estimator (shown below) to get an approximation of the overall reflection.
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/part3/hemisphere-sampling/CBbunny.png" width="90%">
+        <p class="footnote">CBbunny.dae</p>
+    </div>
+    <div class="image-container">
+        <img src="images/part3/hemisphere-sampling/CBdragon.png" width="90%">
+        <p class="footnote">CBdragon.dae</p>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/part3/hemisphere-sampling/CBspheres_lambertian.png" width="90%">
+        <p class="footnote">CBspheres_lambertian.dae</p>
+    </div>
+    <div class="image-container">
+        <img src="images/part3/hemisphere-sampling/CBlucy.png" width="90%">
+        <p class="footnote">CBlucy.dae</p>
+    </div>
+  </div>
+</div>
+<p class="regular-text" >The second sampling method is importance sampling method. Since all the light sources in the scene are stored in a list in the scene object, we don’t have to uniformly sample from all around the hemisphere but only sample from the known light sources. For each scene light, we take some samples, with each sample denoted by an incoming direction. For each sample, we cast a ray to see if there is another object occluding the current object from the light source. We don’t have to do any calculation in the case where the primary intersection point hit_p is behind the light source, or occluded from it. For the point where scene light does travel to, we use the Monte Carlo Estimator to get an approximation of the reflected light exerted by this particular light source. Adding up the influences of all the scene lights, we are able to render the lit scene with lesser noise and cleaner look.
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/part3/importance-sampling/bunny.png" width="90%">
+        <p class="footnote">CBbunny.dae</p>
+    </div>
+    <div class="image-container">
+        <img src="images/part3/importance-sampling/dragon.png" width="90%" height=380px>
+        <p class="footnote">dragon.dae</p>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/part3/importance-sampling/CBspheres_lambertian.png" width="90%">
+        <p class="footnote">CBspheres_lambertian.dae</p>
+    </div>
+    <div class="image-container">
+        <img src="images/part3/importance-sampling/CBlucy.png" width="90%">
+        <p class="footnote">CBlucy.dae</p>
+    </div>
+  </div>
+</div>
+<p class="regular-text" >The noise levels in soft shadows gets reduced when we increase the number of samples per area light, which is set by -l command, from 1, 4, 16, to 64 . (With number of camera rays per pixel remains 1)
+</p>
+<div class="small-gallery-container">
+  <div class="grid">
+    <div class="inline-image-4">
+      <img src="images/part3/importance-sampling/CBbunny_1.png" width=100% height=300px>
+      <p class="footnote">CBbunny.dae, -l 1</p>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part3/importance-sampling/CBbunny_4.png" width=100% height=300px>
+      <p class="footnote">CBbunny.dae, -l 4</p>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part3/importance-sampling/CBbunny_16.png" width=100% height=300px>
+      <p class="footnote">CBbunny.dae, -l 16</p>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part3/importance-sampling/CBbunny_64.png" width=100% height=300px>
+      <p class="footnote">CBbunny.dae, -l 64</p>
+    </div>
+  </div>
+</div>
+<p class="regular-text">
+From the images shown above, it is clear that the results of uniform sampling scheme contain a lot of noise, especially when the number of samples per area light is small, whereas  importance sampling scheme produces smooth, clean, delicate visualizations. The rendering difference is evident from the looks of the walls, where importance sampling produces a neat, almost singular color and uniform sampling scheme produces a clutter consists of lighter and darker spots. The reason why uniform sampling scheme renders noisy images is that it indistinguishably cast rays to arbitrary directions; for some points hit_p that are shed light on, we can be very unlucky and sample from all the wrong directions, and not able to know that this point should be lit, which explains the black spots on the colored walls.
+</p>
+
+
+
+
+
+
+<h2 align="middle">Part IV: Global Illumination</h2>
+
+<p class="regular-text" >In reality, lights bounce between objects infinitely number of times. Each object is illuminated (excluding its own light emission) by lights coming from direct light sources and those bounced off from other surfaces. In the previous part, we only simulate effects of direct lighting, which makes objects look unreal in Cornell Boxes for the lack of inter reflections effects.
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/part4/direct-indirect/direct.png" width="90%">
+        <p class="footnote">CBspheres with only direct illumination</p>
+    </div>
+    <div class="image-container">
+        <img src="images/part4/direct-indirect/indirect.png" width="90%">
+        <p class="footnote">CBspheres with only indirect illumination (-m 5)</p>
+    </div>
+    <div class="image-container">
+        <img src="images/part4/direct-indirect/global.png" width="90%">
+        <p class="footnote">CBspheres with global illumination (-m 100)</p>
+    </div>
+  </div>
+</div>
+<p class="regular-text" >However, in theory, the bounces of lights are infinite, but we cannot do infinite recursions in computations. Therefore in this part, I implemented the recursive function “at_least_one_bounce_radiance” that handles this problem. The function returns the overall reflection color for a point. The return color consists of the first round of the reflection radiance and, if a continue condition is met, the next round of reflection radiance, which is also the overall reflection radiance of another point.
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="inline-image-5">
+      <img src="images/part4/bunny/CBbunny_m0.png" width=100% height=250px>
+      <p class="footnote">CBbunny.dae, -m 0</p>
+    </div>
+    <div class="inline-image-5">
+      <img src="images/part4/bunny/CBbunny_m1.png" width=100% height=250px>
+      <p class="footnote">CBbunny.dae, -m 1</p>
+    </div>
+    <div class="inline-image-5">
+      <img src="images/part4/bunny/CBbunny_m2.png" width=100% height=250px>
+      <p class="footnote">CBbunny.dae, -m 2</p>
+    </div>
+    <div class="inline-image-5">
+      <img src="images/part4/bunny/CBbunny_m3.png" width=100% height=250px>
+      <p class="footnote">CBbunny.dae, -m 3</p>
+    </div>
+    <div class="inline-image-5">
+      <img src="images/part4/bunny/CBbunny_m100.png" width=100% height=250px>
+      <p class="footnote">CBbunny.dae, -m 100</p>
+    </div>
+  </div>
+</div>
+<p class="regular-text" >The continue condition is implemented with Russian Roulette. With probability 0.35, the program will decide to not compute the next level of reflection and terminate, and with probability (1 - 0.35) it will continue. Of course, we have set a maximum depth value in advance so that the total amount level of computation we do will not exceed the limit.
+</p>
+<p class="regular-text" >The algorithm of the recursive function is as follows :
+</p>
+<ul class="list">
+  <li>For each pixel of the image, we cast some rays from camera that goes through the pixel and compute a color for the points whose rays reach an intersection with an object in the scene.
+  </li>
+  <li>For each primary intersection point hit_p, (we have precomputed the zero-bounce radiance elsewhere) we first calculate its one bounce radiance.
+  </li>
+  <li>After that, if the continue condition is met, we go on to compute the next bounce of radiance: from each hit_p, we look for a next point of “light source”. Use BSDF’s sampler to generate an incoming direction and see where it lands in the scene and call it the next intersection point.
+  </li>
+  <li>Call at_least_one_bounce function on the next intersection point to compute the incoming radiance, and add the reflected portion (calculated with the reflection equation again) to the overall radiance leaving point hit_p.
+  </li>
+</ul>
+<p class="regular-text" >Images rendered with global (direct and indirect) illumination : (1024 samples per pixel)
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/part4/display/bench.png" width="90%">
+        <p class="footnote">bench.dae</p>
+    </div>
+    <div class="image-container">
+        <img src="images/part4/display/blob.png" width="90%" >
+        <p class="footnote">blob.dae</p>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/part4/display/dragon.png" width="90%">
+        <p class="footnote">dragon.dae</p>
+    </div>
+    <div class="image-container">
+        <img src="images/part4/display/wall-e.png" width="90%">
+        <p class="footnote">wall-e.dae</p>
+    </div>
+  </div>
+</div>
+<p class="regular-text" >With indirect lighting implemented, pick one scene ( banana.dae ) and compare rendered views with various sample-per-pixel rates, including 1, 2, 4, 8, 16, 64, 128 and 1024 ( -s command ). Use 4 light rays. ( -l command )
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="inline-image-4">
+      <img src="images/part4/sample-rates/banana_s1.png" width=100% height=300px>
+      <p class="footnote">banana.dae, [-s 1]</p>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part4/sample-rates/banana_s2.png" width=100% height=300px>
+      <p class="footnote">banana.dae, [-s 2]</p>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part4/sample-rates/banana_s4.png" width=100% height=300px>
+      <p class="footnote">banana.dae, [-s 4]</p>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part4/sample-rates/banana_s8.png" width=100% height=300px>
+      <p class="footnote">banana.dae, [-s 8]</p>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="inline-image-4">
+      <img src="images/part4/sample-rates/banana_s16.png" width=100% height=300px>
+      <p class="footnote">banana.dae, [-s 16]</p>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part4/sample-rates/banana_s64.png" width=100% height=300px>
+      <p class="footnote">banana.dae, [-s 64]</p>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part4/sample-rates/banana_s128.png" width=100% height=300px>
+      <p class="footnote">banana.dae, [-s 128]</p>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part4/sample-rates/banana_s1024.png" width=100% height=300px>
+      <p class="footnote">banana.dae, [-s 1024]</p>
+    </div>
+  </div>
+</div>
+
+
+
+
+<h3 align="middle">Part V: Adaptive Sampling</h3>
+<p class="regular-text" >In previous parts, we take a fixed number of samples for each pixel of the image regardless of where it is. However, in some cases, we don’t need as many samples because they converge quickly. Adaptive sampling is a technique that allows us to skip a lot of unnecessary computation for the easy part of the scene and concentrate samples in the more difficult parts. This scheme can effectively improve runtime performance.
+In order to implement adaptive sampling, I made some modification in raytrace_pixel:
+</p>
+<p class="regular-text" >Originally, there is a loop where I take a sample for a fixed number of times. I added a variable to keep track of how many samples been taken. Once the number reaches a batch, I pause and  measure the pixel's convergence of all the samples taken so far, which is the variable I elaborated in the project specs. If it’s conclusive that the pixel converges, I break the loop and determine that my sampling is complete. If not, I reset my count variable to 0 and continue the tracing-and-detecting loop.
+</p>
+<p class="regular-text" >
+In the sample rate graph below, we use red and blue colors to represent high and low sampling rates.
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/part5/bunny.png" width="90%">
+        <p class="footnote">CBbunny.dae, -s 2048, -l 1, -m 100</p>
+    </div>
+    <div class="image-container">
+        <img src="images/part5/bunny_rate.png" width="90%">
+        <p class="footnote">sample_rate</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

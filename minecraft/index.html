@@ -1,0 +1,349 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<style>
+
+
+
+@import url('https://fonts.googleapis.com/css2?family=Cuprum&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Advent+Pro:wght@100&family=Cuprum&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Advent+Pro:wght@100&family=Cuprum&family=Gochi+Hand&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Advent+Pro:wght@100&family=Cuprum&family=Gochi+Hand&family=Raleway:wght@100&display=swap');
+
+  .four{
+    padding:30px;
+  }
+  *{
+      font-family: 'Raleway', sans-serif;
+
+  }
+  body {
+    padding-top: 100px;
+    padding-bottom: 100px;
+    text-align: left;
+    font-weight: 100;
+    font-size: 5;
+    color: #121212;
+  }
+  /* texts */
+  h1, h2 {
+    font-size: 40px;
+  }
+  h3, h4 {
+    font-size: 30px;
+  }
+  h1, h2 {
+    padding: 30px;
+  }
+  h3, h4 {
+    padding: 10px;
+  }
+  .regular-text {
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-top:20px;
+    padding-bottom: 20px;
+    line-height: 2;
+    font-size:17px;
+  }
+  .list{
+    line-height:2;
+    margin-left: 70px;
+    margin-right: 70px;
+    padding-left: 100px;
+    padding-right: 100px;
+    font-size:17px;
+  }
+  .footnote {
+    padding-bottom:20px;
+    font-size: 14px;
+  }
+  /* images */
+  .gallery {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 80px;
+    margin-bottom: 80px;
+  }
+
+  .small-gallery-container {
+      margin-top: 40px;
+      margin-bottom: 30px;
+  }
+
+  .large-gallery-container {
+    margin-top: 50px;
+    margin-bottom: 50px;
+  }
+
+  .grid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .inline-image {
+    width: 33.3%;
+    text-align: center;
+  }
+  .inline-image-4 {
+    width: 25%;
+    text-align: center;
+  }
+  .inline-image-5 {
+    width: 20%;
+    text-align: center;
+  }
+
+  .image-container {
+    width: 40%;
+    text-align: center;
+    align-content: center;
+  }
+
+  .lecture {
+    margin-left: 100px;
+    margin-right: 20px;
+    text-align: center;
+  }
+
+</style>
+<title>CS 184 FinalProject</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link href="https://fonts.googleapis.com/css?family=Open+Sans|Source+Sans+Pro" rel="stylesheet">
+</head>
+
+<body>
+<h1 align="middle">CS 184: Computer Graphics and Imaging, Spring 2022</h1>
+  <h1 align="middle">Final Project: Better Visuals for Minecraft</h1>
+<p class="regular-text" align="middle">" In summary, we implemented an efficient shader that gives decent shadows to the game."<div class="gallery">
+  <img src="images/5.png" width=100%>
+  <img src="images/6.png" width=100%>
+</div>
+<p  class="regular-text" align="middle">Yaofu Zuo, Bohan Yu, Hao Jie Zhou, Sara Wang</p>
+<br><br>
+
+
+
+
+<div>
+<h2 align="middle">Abstract</h2>
+<p class="regular-text" > In summary, we implemented an efficient shader that gives decent shadows to the game. Minecraft is a classic game, but the default visuals are pretty basic and unrealistic, it is especially obvious in the older versions of the game. Our overarching goal for this project is to implement a shader program that provides higher graphics fidelity, and we hope to enhance minecraft player’s gaming experience by improving visualizations of the
+  game. <a href="https://youtu.be/SfR5Zsf6tJY">See video</a></p>
+
+
+
+<h2 align="middle">Part I: Technical Approach</h2>
+<h4 align="middle">Shader Pipeline</h4>
+<p class="regular-text" >A Shader program is what defines the graphics of the game. The shader folder contains various GLSL files, which are code we wrote for geometry, shadows, and lighting of the visualizations of the game. These made up the main components of the shader pipeline: the gbuffer shaders come first in the pipeline, as they are the main geometry passes, which allows you to render particles, block; The composite shaders then render the texture; Then the outputs are sent to the final shader and get rendered directly to the screen.</p>
+<h4 align="middle">I. Understanding the pipeline from scratch</h4>
+<p class="regular-text" >We first implemented the final screen pass. We simply passed the texture coordinates from the vertex shader to the fragment shader, and we sampled the color at that position from minecraft’s built-in texture. Then we output the sampled color into gl_FragColor.
+ </p>
+<p class="regular-text" >Sanity check: We applied grayscale to the game by dividing each RGB channel by 3. Here is a screenshot of the result:
+</p>
+<div class="small-gallary-container">
+  <div class="grid">
+    <img src="images/grayscale.png" width=50%>
+  </div>
+</div>
+<h4 align="middle">II. Adding Color</h4>
+<p class="regular-text" >In this part, we implemented the fragment shader for the terrain rendering-pass part of the pipeline. We first sampled the reflectance using the built-in texture coordinates attribute passed from the vertex shader, just like the final screen pass shader. Then, we calculated the final color by multiplying the reflectance by the block color, which is again, passed from a built-in attribute from the vertex shader. We then passed the final color down the pipeline.
+</p>
+<p class="regular-text" >The next stage of the pipeline would be the composite fullscreen pass shader. Since we would need the normal vector of the block in the composite fullscreen pass, we got the block’s normal vector in world space from the vertex shader and transformed the vector to view space by left-multiplying the gl_NormalMatrix, which is the inverse transpose of the upper left 3x3 part of the model-view matrix. We then passed this normal vector down to the composite full-screen pass of the pipeline. There is one problem we encountered when doing this: we can only pass color texture data, which is unsigned, down the pipeline, so we had to rescale the normal vector to [0, 1] from [-1, 1] before passing it down. (Newer version of OpenGL supports signed passes.)
+</p>
+<p class="regular-text" >With these “pre-processes,” we can finally implement ambient and diffuse lighting in the composite fullscreen pass shader file. The formula is the same as those in the lectures. First, we computed the Lambertian Diffuse lighting coefficient by taking the dot product of the block’s normal vector (rescaled back to [-1, 1]) and the unit vector pointing towards the sun(light source). Then, we summed the diffuse coefficient and the ambient lighting coefficient, for which we gave the value of 0.1. At last, we calculated the final color by multiplying the color – which is passed down from the terrain pass – by the sum of the two coefficients.
+</p>
+<div class="small-gallary-container">
+  <div class="grid">
+    <img src="images/handnote.jpeg" width=50%>
+  </div>
+</div>
+<p class="regular-text" >However, everything seemed darker than expected(as shown in the left image below). With hours of debugging, we found that we did not account for Gamma Correction (See the reference section for more information). The general procedure to gamma correct according to learnopengl.com is to first scale the sampled color to a power of 2.2, apply the ambient and diffuse lighting calculation from the previous part, and inverse scale the result to the power of 1/2.2. However, we optimized this procedure by simply scaling the multiplier, which is the sum of the two lighting coefficients, to the power of 1/2.2. The derivation is also shown below.
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/nogamma.png" width="90%" >
+        <p class="footnote">no gamma correction</p>
+    </div>
+    <div class="image-container">
+        <img src="images/withgamma.png" width="90%" >
+        <p class="footnote">with gamma correction</p>
+    </div>
+  </div>
+</div>
+<p class="regular-text" >Still, when we face the sun, things become much darker. But anyway, here is our result for this stage:</p>
+<div class="small-gallary-container">
+  <div class="grid">
+    <img src="images/gammaresult.png" width=50%>
+  </div>
+</div>
+<h4 align="middle">III. Shadows and Light Mapping</h4>
+<p class="regular-text" >In the screenshot above, you might notice that the torch isn’t lighting its surroundings. That’s because we still need to fix light maps, which store the light value for the “sun” and nearby light sources (e.g. torch) shed on a given block. This essentially changes the brightness of the color of a block. There’s no specific formula to take these lights into account, as long as you don’t go out of bounds. There’s also a lot of fancy mappings online. But we decided to self-design an easy one as follows for a given block (That’s one reason why we chose this project: freedom in design!):     </p>
+<p class="regular-text" align="middle">Torch light = default torch light *3.5 *  pow ( torch light value in the light map, 5)<br>Sky light = default sky light*  pow ( sky  light value in the light map, 5)</p>
+<p class="regular-text" > Here’s the result: (Note that this one was rendered with shadows, but the point here is the torch light and skylight.)</p>
+<div class="small-gallary-container">
+  <div class="grid">
+    <img src="images/shadow1.png" width=50%>
+  </div>
+</div>
+<p class="regular-text" >Now the torch can finally light up surroundings. It’s time to take care of shadows. We approximate the shadow effects by masking out diffuse lighting, leaving just the ambient one. To check if a block should have shadows, we used Minecraft’s default depth map, which is created by rendering the scene from the light source’s(the sun’s) point of view. The depth map essentially tells us that at a given sample coordinate (we can convert texture coordinates into depth-map coordinates), if the converted coordinates’ depth is lower than the existing depth value at this coordinate, then this sample coordinate should be in shadow. It’s similar to how a Z-buffer works. Here is the result:
+</p>
+<div class="small-gallary-container">
+  <div class="grid">
+    <img src="images/shadow2.png" width=50%>
+  </div>
+</div>
+<h4 align="middle">bug fixes</h4>
+<p class="regular-text" >After implementing part 2, there was a problem where blocks get darker if you face the sun, and vice versa. This is because the composite shader we wrote also applied to the sky (a mistake that every beginner could make). With the depth map, we can check if the block is a sky-block and thus not apply our composite to it.
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/bugfix1.png" width="90%" >
+        <p class="footnote">before bug fixes (facing the sun)</p>
+    </div>
+    <div class="image-container">
+        <img src="images/bugfix2.png" width="90%" >
+        <p class="footnote">after bug fixes (still facing the sun)</p>
+    </div>
+  </div>
+</div>
+<h4 align="middle">IV. More Realistic Shadows</h4>
+<h4 align="middle">better shapes: </h4>
+<p class="regular-text" >The current shadow we implemented has a bizarre shape. To better approximate the objects that created the shadow, we barycentric-ally distorted the shadow clip vertices according to their distance to the clip center to better. Also, we think that realistic shadows’ edges should be softer(there should be a progression from dark to less dark to no shadow), so for each coordinate, we supersampled its 6x6 nearest neighbors’ shadow value and took the average of those 36 values. Instead of setting a binary value for our diffuse lighting coefficient(0 or 1), we multiplied (1 - average shadow value) by the diffuse lighting coefficient instead, making edges even more smooth.
+</p>
+<p class="regular-text" >Here’s our avatar’s shadow:
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/shape.png" width="90%" >
+        <p class="footnote">before</p>
+    </div>
+    <div class="image-container">
+        <img src="images/bettershape.png" width="90%" >
+        <p class="footnote">after</p>
+    </div>
+  </div>
+</div>
+<h4 align="middle">colored shadows</h4>
+<p class="regular-text" >We also added colored shadows for transparent objects like colored glass. Even if we know the color of the glass that is causing the shadows, we need to somehow “mix” its color with the shadow. We basically take a weighted average of the original dark shadow and the color of the glass to produce a colored shadow. The weights can be adjusted freely.
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/beforecolored.png" width="90%" >
+        <p class="footnote">Before (this one is rendered without soft shadows or vertex distortion)</p>
+    </div>
+    <div class="image-container">
+        <img src="images/aftercolored.png" width="90%" >
+        <p class="footnote">After (when everything gets fixed)</p>
+    </div>
+  </div>
+</div>
+
+
+
+
+<h2 align="middle">Part II: More Results</h2>
+<h4 align="middle">Minecraft with no Shaders vs. Minecraft with our Shader</h4>
+<p class="regular-text">Here we have a picture comparison of our Minecraft Test scene with and without shaders. After applying our shaders, you can see significant improvements across the entire test scene.</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/1.png" width="90%" >
+        <p class="footnote">no shader</p>
+    </div>
+    <div class="image-container">
+        <img src="images/2.png" width="90%" >
+        <p class="footnote">our shader</p>
+    </div>
+  </div>
+</div>
+<h4 align="middle">Soft and Colored Shadows</h4>
+<p class="regular-text">Original implementation of Minecraft does not implement shadows. Applying our shader will add shadows with soft edges and proper coloring.</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/3.png" width="90%" >
+        <p class="footnote">default shader</p>
+    </div>
+    <div class="image-container">
+        <img src="images/4.png" width="90%" >
+        <p class="footnote">our shader</p>
+    </div>
+  </div>
+</div>
+<h4 align="middle">Shadows based on time of day</h4>
+<p class="regular-text">Shadows also move based on the time of day. If the sun is directly above the object, shadows will be shorter. If the sun is to the side of the object, the shadows will be elongated.
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/5.png" width="90%" >
+        <p class="footnote">noon</p>
+    </div>
+    <div class="image-container">
+        <img src="images/6.png" width="90%" >
+        <p class="footnote">sunset</p>
+    </div>
+  </div>
+</div>
+<h4 align="middle">Ambient and Diffuse Lighting</h4>
+<p class="regular-text">Lighting has also been re-done to account for ambient and diffuse lighting, pushing the sense of realism even further.</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/7.png" width="90%" >
+        <p class="footnote">ambient lighting</p>
+    </div>
+    <div class="image-container">
+        <img src="images/8.png" width="90%" >
+        <p class="footnote">diffuse lighting</p>
+    </div>
+  </div>
+</div>
+<h4 align="middle">Torch Lighting</h4>
+<p class="regular-text">Before making adjustments, the torch light was dim and barely visible. After we make modification in the shader, the lumination of the torch light is also amplified to better simulate real life torches. </p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/9.png" width="90%" >
+        <p class="footnote">default shader</p>
+    </div>
+    <div class="image-container">
+        <img src="images/10.png" width="90%" >
+        <p class="footnote">our shader</p>
+    </div>
+  </div>
+</div>
+
+
+
+
+<h3 align="middle">References</h3>
+<ul class="list">
+  <li><a href="https://www.minecraft.net/en-us/about-minecraft">Minecraft</a></li>
+  <li><a href="https://optifine.net/home">Optifine website</a></li>
+  <li><a href="https://github.com/sp614x/optifine/blob/master/OptiFineDoc/doc/shaders.txt">Optifine Shader Documentation</a></li>
+  <li><a href="https://www.khronos.org/registry/OpenGL/specs/gl/glspec32.core.pdf">OpenGL 3.2 Documentation</a></li>
+  <li><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/">Alternate OpenGL Documentation</a></li>
+  <li><a href="http://learnopengl.com/Advanced-Lighting/Gamma-Correction">Gamma Correction</a></li>
+</ul>
+
+
+
+<!-- <h3 align="middle">Contributions from each team member</h3>
+<ul class="list">
+  <li>All team members contributed equally in conducting research into the topic in the early stages of our project such as the OpenGL rendering pipeline and Minecraft shader documentation.</li>
+  <li>Hao Jie, Sara, and Bohan were responsible for reworking the lighting including ambient and diffuse lighting as well as implementing basic shadows.</li>
+  <li>Yaofu and Bohan were responsible for refining the shadows to have softer, realistic details and proper coloring for translucent objects.</li>
+  <li>Yaofu also corrected the lighting to account for gamma correction.</li>
+  <li>All team members were in constant communication throughout the entire project via Zoom and WeChat.</li>
+  <li>All team members were involved in working on/testing the program together via Zoom screen sharing.</li>
+</ul> -->
+
+</body>
+</html>
