@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>cs194project4</title>
+        <style>
+            *{
+                font-family: "Courier New", Courier, monospace;
+            }
+            .heading {
+                margin-top: 80px;
+                margin-bottom: 80px;
+                text-align: center;
+            } 
+            .content{
+                margin-top: 50px;
+                margin-bottom: 50px;
+
+            }
+            .part {
+                text-align: center;
+                margin-bottom: 70px;
+            }
+            .gallery {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-top: 80px;
+                margin-bottom: 80px;
+            }
+            .gallery-container {
+                margin-top: 60px;
+                margin-bottom: 100px;
+            }
+            .smaller-gallery-container {
+                margin-top: 30px;
+                margin-bottom: 30px;
+            }
+            .grid {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .inline-image{
+                width:33.3%;
+            }
+            .inline-image2{
+                width:16.7%;
+            }
+            .gif {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            .narrative {
+                padding-left: 100px;
+                padding-right: 100px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                line-height: 150%;
+            }
+
+
+        </style>
+    </head>
+    <body>
+        <div class="heading">
+        <h2>CompSci 194 - Final Project</h2>
+
+        <p>"Pre-canned projects: Light field camera + A Neural Algorithm of Artistic Style"</p>
+            <div class="gallery-container">
+                <img src="cover.jpg" width="100%" height=400px>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="part">
+                <h3>Project 1. Light Field Camera</h3>
+                <div class="narrative">
+                    <p>For this project, I used rectified photos from the Stanford Light Field Archive, which has datasets comprising of multiple images taken over a regularly spaced grid. I used the image of a chess board.</p>
+                </div>
+                 <div class="gallery-container">
+                    <div class="narrative">
+                        <p>Depth refocusing.</p>
+                    </div>
+                    <div class="grid">
+                        <div class="inline-image">
+                            <img src="lightfieldcamera/focus_-0.6_aperture_6.jpg" width="100%">
+                            <p>focus = -0.6</p>
+                        </div>
+                        <div class="inline-image">
+                            <img src="lightfieldcamera/focus_-0.5_aperture_6.jpg" width="100%">
+                            <p>focus = -0.5</p>
+                        </div>
+                        <div class="inline-image">
+                            <img src="lightfieldcamera/focus_-0.4_aperture_6.jpg" width="100%">
+                            <p>focus = -0.4</p>
+                        </div>
+                        <div class="inline-image">
+                            <img src="lightfieldcamera/focus_-0.3_aperture_6.jpg" width="100%">
+                            <p>focus = -0.3</p>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="inline-image">
+                            <img src="lightfieldcamera/focus_-0.2_aperture_6.jpg" width="100%">
+                            <p>focus = -0.2</p>
+                        </div>
+                        <div class="inline-image">
+                            <img src="lightfieldcamera/focus_-0.1_aperture_6.jpg" width="100%">
+                            <p>focus = -0.1</p>
+                        </div>
+                        <div class="inline-image">
+                            <img src="lightfieldcamera/focus_0.0_aperture_6.jpg" width="100%">
+                            <p>focus = 0</p>
+                        </div>
+                        <div class="inline-image">
+                            <img src="lightfieldcamera/focus_0.1_aperture_6.jpg" width="100%">
+                            <p>focus = 0.1</p>
+                        </div>
+                    </div>
+                    <p>results after changing the focus</p>
+                </div>
+
+                <div class="narrative">
+                    <p>The first task is generating the effects of refocusing the camera at different depth. The nearby objects should be very clear, whereas the objects far away should look blurry in comparison. </p>
+                    <p>The rectified images are sorted. To implement this, I loop through the dataset with respect to the center image, located at row 8, col 8, and readjusted necessary images with shifted focus. Then I average all the images in the grid to simulate focus at different depths.</p>
+                    <p>To enhance the visual effects, i set the aperture to 6, which is pretty high.</p>
+                    <p></p>
+                </div>
+
+                <div class="gallery-container">
+                    <div class="narrative">
+                        <p>Aperture Adjustment.</p>
+                    </div>
+                    <div class="grid">
+                        <div class="inline-image">
+                            <img src="lightfieldcamera/focus_0_aperture_1.jpg" width="100%">
+                            <p>aperture = 1</p>
+                        </div>
+                        <div class="inline-image">
+                            <img src="lightfieldcamera/focus_0_aperture_2.jpg" width="100%">
+                            <p>aperture = 2</p>
+                        </div>
+                        <div class="inline-image">
+                            <img src="lightfieldcamera/focus_0_aperture_3.jpg" width="100%">
+                            <p>aperture = 3</p>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="inline-image">
+                            <img src="lightfieldcamera/focus_0_aperture_4.jpg" width="100%">
+                            <p>aperture = 4</p>
+                        </div>
+                        <div class="inline-image">
+                            <img src="lightfieldcamera/focus_0_aperture_5.jpg" width="100%">
+                            <p>aperture = 5</p>
+                        </div>
+                        <div class="inline-image">
+                            <img src="lightfieldcamera/focus_0_aperture_6.jpg" width="100%">
+                            <p>aperture = 6</p>
+                        </div>
+                    </div>
+                    <p>Different Aperture values results</p>
+                </div>
+
+                <div class="narrative">
+                    <p>Averaging a large number of images sampled over the grid (perpendicular to the optical axis) will produce a large aperture effects, whereas averaging over fewer images will generate the effects that mimics small aperture.</p>
+                    <p>To implement this, I loop through all the image in the dataset, in a row by row, col by col order. (thereby labeling each image (i,j))I add image to my collection only if it meets the standard of <b>having math.pow((i-8),2) + math.pow((j-8),2)</b> smaller than <b>math.pow(aperture,2)</b>. Then I average over my pool of selected photos that meets the criteria of given aperture.</p>
+                    <p>Focus remains the same in the aperture adjustment section.</p>
+                </div>
+
+                <div class="narrative">
+                    <p>--- GIFs ---</p>
+                </div>
+
+                <div class="grid">
+                    <div class="image">
+                        <img src="lightfieldcamera/gif/refocusing.gif" height="300px">
+                    </div>
+                </div>
+
+                <div class="narrative">
+                    <p>"Refocusing.gif"</p>
+                </div>
+
+                <div class="grid">
+                    <div class="image">
+                        <img src="lightfieldcamera/gif/aperture_adjustment.gif" height="300px">
+                    </div>
+                </div>
+
+                <div class="narrative">
+                    <p>"Aperture_adjustment.gif"</p>
+                </div>
+
+
+
+            </div>
+
+            <div class="part">
+                <h3>Project 2. A Neural Algorithm of Artistic Style</h3>
+                <div class="narrative">
+                    <p>This is a particularly fascinating project, where i am able to in a artistic way combine classic paintings with images of my daily life. The main goal of the project is separation of image content from image style,  thus allowing to recast the content of one image in the style of any other image throught the means of artificial neural networks. In demonstration of the fascinating idea of style + content hybrid, I created my own "artistic images", combination of the style of well-known paintings with the content of my own phytography collections.</p>
+                    <p>My first creation is the recast of my childhood playground in the style of The Starry Night by Dutch Post-Impressionist painter Vincent van Gogh, as shown below.</p>
+                </div>
+                <div class="gallery">
+                    <div class="inline-image">
+                        <img src="neural/star.jpg" width=100% height="400px">
+                        <p>Style</p>
+                    </div>
+                    <div class="inline-image">
+                        <img src="neural/playground.jpg" width=100% height="400px">
+                        <p>Content</p>
+                    </div>
+                </div>
+
+                <div class="narrative">
+                    <p>I used publicly accessible pretrained "VGG19" artificial network according to the paper, and run my training loop on the content and style images for 100 iterations. (I originally planned to run more, but google colab crashes easily some points after that) </p>
+                    <p>I saved my recast results every 10th iteration. The result is shown below. </p>
+                </div>
+
+                <div class="gallery-container">
+                    <div class="narrative">
+                        <p>Results from the 10th - 80th iterations</p>
+                    </div>
+                    <div class="grid">
+                        <div class="inline-image">
+                            <img src="neural/output1/10.png" width="100%">
+                            <p>at 10th epoch</p>
+                        </div>
+                        <div class="inline-image">
+                            <img src="neural/output1/20.png" width="100%">
+                            <p>at 20th epoch</p>
+                        </div>
+                        <div class="inline-image">
+                            <img src="neural/output1/30.png" width="100%">
+                            <p>at 30th epoch</p>
+                        </div>
+                        <div class="inline-image">
+                            <img src="neural/output1/40.png" width="100%">
+                            <p>at 40th epoch</p>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="inline-image">
+                            <img src="neural/output1/50.png" width="100%">
+                            <p>at 50th epoch</p>
+                        </div>
+                        <div class="inline-image">
+                            <img src="neural/output1/60.png" width="100%">
+                            <p>at 60th epoch</p>
+                        </div>
+                        <div class="inline-image">
+                            <img src="neural/output1/70.png" width="100%">
+                            <p>at 70th epoch</p>
+                        </div>
+                        <div class="inline-image">
+                            <img src="neural/output1/80.png" width="100%">
+                            <p>at 80th epoch</p>
+                        </div>
+                    </div>
+                    <p>100 epochs in total</p>
+                </div>
+
+                <div class="narrative">
+                    <p>However, due to the limitation of my GPU engine, and the paper's lack of instruction on any specific CNN configuration and parameters, my results are not perfect. The recast effects is not as satisfying as the work attached in the paper (shown below), but the general color and style is already showing. </p>
+                </div>
+
+                <div class="gallery">
+                    <div class="inline-image">
+                        <img src="neural/paper1.png" width=100% height="400px">
+                        <p>Example case from the paper A Neural Algorithm of Artistic Style</p>
+                    </div>
+                </div>
+
+
+                <div class="narrative">
+                    <p> 2nd case: I did a artistic style transfer from "The Scream" to my book shelf.  </p>
+                </div>
+
+                 <div class="gallery">
+                    <div class="inline-image">
+                        <img src="neural/scream.jpg" width=100% height="400px">
+                        <p>Style</p>
+                    </div>
+                    <div class="inline-image">
+                        <img src="neural/bookshelf.jpg" width=100% height="400px">
+                        <p>Content</p>
+                    </div>
+                </div>
+
+                <div class="gallery-container">
+                    <div class="narrative">
+                        <p>Results from the 10th - 80th iterations</p>
+                    </div>
+                    <div class="grid">
+                        <div class="inline-image">
+                            <img src="neural/output2/10.jpg" width="100%">
+                            <p>at 10th epoch</p>
+                        </div>
+                        <div class="inline-image">
+                            <img src="neural/output2/20.jpg" width="100%">
+                            <p>at 20th epoch</p>
+                        </div>
+                        <div class="inline-image">
+                            <img src="neural/output2/30.jpg" width="100%">
+                            <p>at 30th epoch</p>
+                        </div>
+                        <div class="inline-image">
+                            <img src="neural/output2/40.jpg" width="100%">
+                            <p>at 40th epoch</p>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="inline-image">
+                            <img src="neural/output2/50.jpg" width="100%">
+                            <p>at 50th epoch</p>
+                        </div>
+                        <div class="inline-image">
+                            <img src="neural/output2/60.jpg" width="100%">
+                            <p>at 60th epoch</p>
+                        </div>
+                        <div class="inline-image">
+                            <img src="neural/output2/70.jpg" width="100%">
+                            <p>at 70th epoch</p>
+                        </div>
+                        <div class="inline-image">
+                            <img src="neural/output2/80.jpg" width="100%">
+                            <p>at 80th epoch</p>
+                        </div>
+                    </div>
+                    <p>100 iterations in total </p>
+                </div>
+                <div class="narrative">
+                    <p>I'm more satisfied with my second creation compared to the first. The color and the style of the paintings is pretty obvious recasted on my bookshelf, even the strokes are showing. </p>
+                    <p>Attached is an amazing work from the paper.</p>
+                </div>
+
+                <div class="gallery">
+                    <div class="inline-image">
+                        <img src="neural/paper2.png" width="100%">
+                    </div>
+
+                </div>
+
+
+
+
+
+            </div>
+
+
+
+
+        </div>
+    </body>
+</html>

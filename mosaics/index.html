@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html> 
+    <head> 
+        <title>cs194project4</title>
+        <style>
+            *{
+                font-family: "Courier New", Courier, monospace;
+            }
+            .heading {
+                margin-top: 80px;
+                margin-bottom: 80px;
+                text-align: center;
+            } 
+            .content{
+                margin-top: 50px;
+                margin-bottom: 50px;
+                
+            }
+            .part {
+                text-align: center;
+                margin-bottom: 70px;
+            }
+            .gallery {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-top: 80px;
+                margin-bottom: 80px;
+            }
+            .gallery-container {
+                margin-top: 60px;
+                margin-bottom: 100px;
+            }
+            .smaller-gallery-container {
+                margin-top: 30px;
+                margin-bottom: 30px;
+            }
+            .grid {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .image{
+                height=500px;
+            }
+            .inline-image{
+                width:33.3%;
+            }
+            .inline-image2{
+                width:25%;
+            }
+            .gif {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            
+            .narrative {
+                padding-left: 100px;
+                padding-right: 100px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                line-height: 150%;
+            }
+            
+            
+        </style>
+    </head>
+    <body>
+        <div class="heading">
+        <h2>CompSci 194 - AutoStitching Photo Mosaics</h2> 
+            
+        <p>" This project is all about stitching together many photographs to create larger composite images. "</p>
+            
+            
+        </div>
+        
+        <div class="content">
+            <div class="part">
+                <h3>Part A. IMAGE WARPING and MOSAICING</h3>
+               
+                <div class="narrative">
+                    <p>Shoot the pictures. The pictures are taken of a playground from exactly the same points of view, but with different view directions. For the right image, the camera is slightly tilted to the right.</p>
+                </div>
+                <div class="gallery">
+                    <div class="inline-image">
+                        <img src="input/left.jpeg" width="100%">
+                        <p>Left</p>
+                    </div>
+                    <div class="inline-image">
+                        <img src="input/right.jpeg" width="100%">
+                        <p>Right</p>
+                    </div>
+                </div>
+                
+                <div class="narrative">
+                    <p>Recover Homography.</p>
+                    <p>[[ 2.14469011e+00 -8.18563958e-03 -1.62752628e+03]<br>
+     [ 3.90044474e-01  1.73674619e+00 -2.87985995e+02]<br>
+     [ 8.56283396e-04 -1.59979507e-04  1.00000000e+00]]</p>   
+                </div>
+                
+                <div class="gallery">
+                    <div class="inline-image">
+                        <img src="output/warp/left_points.jpg" width="100%">
+                        <p>Left</p>
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/warp/right_points.jpg" width="100%">
+                        <p>Right</p>
+                    </div>
+                </div>
+                
+                <div class="narrative">
+                    <p>I manually selected 8 points from each of the pictures, all of which are distinct features such as the corners of the slide, the edges of the stairs, as shown above. </p>
+                    <p> In order to recover the homography matrix, since there are more data <b>(16)</b> than unknowns <b>(8)</b>, I rearrange <b>p'=pX</b> equation and solved the overdetermined system by least square method <b>np.linalg.lstsq()</b>. </p>   
+                    <p>To make sure the warped image does not go beyond the canvas, I used forward warping to compute where the image corners land in the destination direction to see if they go overboard. If so, I pad the image with 0 (black borders) beforehand. </p>
+                    <p>With the homography matrix H, I am able to warp the left image to match the view direction of the right image. Since inverse warping works better, I compute the corresponding coordinates of pixels in the source image of each pixels in the destination image. I used <b>scipy.ndimage.map_coordinates()</b> to map the corresponding pixels. </p>
+                        
+                    <p>With the left image warped to match the view direction of the right image, I stitch them together to make a mosaic. The results are shown below.</p>
+                </div>
+                 <div class="gallery">
+                    <div class="inline-image">
+                        <img src="output/warp/padded_im1.jpg" width="100%">
+                        <p>Padded left image</p>
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/warp/warped_left.jpg" width="100%">
+                        <p>Warped image</p>
+                    </div>
+                     <div class="inline-image">
+                        <img src="output/warp/mosaic.jpg" width="100%">
+                        <p>Mosaic</p>
+                    </div>
+                </div>
+                
+                <div class="narrative">
+                    <p>--- other examples ---</p>   
+                </div>
+                
+                <div class="gallery">
+                    <div class="inline-image">
+                        <img src="input/desktop_left.jpeg" width="100%">
+                        <p>Desktop Left</p>
+                    </div>
+                    <div class="inline-image">
+                        <img src="input/desktop_right.jpeg" width="100%">
+                        <p>Desktop Right</p>
+                    </div>
+                    
+                </div>
+                
+                <div class="gallery">
+                    <div class="inline-image">
+                        <img src="output/warp/warped_left_2.jpg" width="100%">
+                        <p>Warped</p>
+                    </div>
+                     <div class="inline-image">
+                        <img src="output/warp/mosaic_2.jpg" width="100%">
+                        <p>Mosaic</p>
+                    </div>
+                </div>
+                
+                <div class="narrative">
+                    <p>--- other examples ---</p>   
+                </div>
+                
+                <div class="gallery">
+                    <div class="inline-image">
+                        <img src="input/kitchen_left.jpeg" width="100%">
+                        <p>Kitchen Left</p>
+                    </div>
+                    <div class="inline-image">
+                        <img src="input/kitchen_right.jpeg" width="100%">
+                        <p>Kitchen Right</p>
+                    </div>
+                </div>
+                <div class="gallery">
+                    <div class="inline-image">
+                        <img src="output/warp/warped_left_3.jpg" width="100%">
+                        <p>Warped</p>
+                    </div>
+                     <div class="inline-image">
+                        <img src="output/warp/mosaic_3.jpg" width="100%">
+                        <p>Mosaic</p>
+                    </div>
+                </div>
+                
+                <div class="narrative">
+                    <p>Image rectification. I took a few sample images with some planar surfaces (notebook, cupboard). The goal is to "rectify" their tilted surfaces so that the plane is frontal-parallel.</p>   
+                </div>
+                
+                <div class="gallery">
+                    <div class="inline-image2">
+                        <img src="output/rectification/points_rectification1.jpeg" width="100%">
+                        <p>Original points</p>
+                    </div>
+                    <div class="inline-image2">
+                        <img src="output/rectification/desired_points_rectification1.jpeg" width="100%">
+                        <p>Rectification points</p>
+                    </div>
+                     <div class="inline-image2">
+                        <img src="output/rectification/points_rectification2.jpeg" width="100%">
+                        <p>Original points</p>
+                    </div>
+                    <div class="inline-image2">
+                        <img src="output/rectification/desired_points_rectification2.jpeg" width="100%">
+                        <p>Rectification points</p>
+                    </div>
+                </div>
+                
+                <div class="narrative">
+                    <p>Since the objects are rectangles, I selected only 4 points from each image (4 corners). Then I defined 4 points that form a perfect rectangle shape in the center of the image canvas, and perform a warping on the original image. The process is straightforward and simple, and all of my rectification attempts are successes.</p>   
+                </div>
+                
+                <div class="gallery">
+                    <div class="inline-image">
+                        <img src="input/rectification1.jpeg" width="100%" height=600px>
+                        <p>Original Image</p>
+                    </div>
+                     <p>-</p>
+                    <div class="inline-image">
+                        <img src="output/rectification/rectified_rectification1.jpeg" width="100%" height=600px>
+                        <p>Rectified image</p>
+                    </div>
+                </div>
+                <div class="gallery">
+                    <div class="inline-image">
+                        <img src="input/rectification2.jpeg" width="100%"  height=400px>
+                        <p>Original image</p>
+                    </div>
+                     <p>-</p>
+                    <div class="inline-image">
+                        <img src="output/rectification/rectified_rectification2.jpeg" width="100%"  height=400px>
+                        <p>Rectified image</p>
+                    </div>
+                </div>
+                
+                
+            </div>
+            
+            <div class="part">
+                <h3>Part B. FEATURE MATCHING for AUTOSTITCHING</h3>
+                <div class="narrative">
+                    <p>Step 1-3: For this part, I implemented the algorithm described by the paper “Multi-Image Matching using Multi-Scale Oriented Patches” by Brown et al. </p>
+                </div>
+                <div class="gallery">
+                    <div class="inline-image">
+                        <img src="input/left2.jpeg" width=100%>
+                        <p>left</p>
+                    </div>
+                    <p>-</p>
+                    
+                    <div class="inline-image">
+                        <img src="input/right2.jpeg" width=100%>
+                        <p>Right</p>
+                    </div>
+                </div>
+                
+                <div class="gallery">
+                    <div class="inline-image">
+                        <img src="input/left1.jpeg" width=100%>
+                        <p>left</p>
+                    </div>
+                    <p>-</p>
+                    
+                    <div class="inline-image">
+                        <img src="input/right1.jpeg" width=100%>
+                        <p>Right</p>
+                    </div>
+                </div>
+                
+                <div class="narrative">
+                    <p>Step 1: Harris Interest Point Detector (Section 2). I used the given sample code harris.py to extract harris corners points from each images. I had to adjust the min_distance parameter otherwise there would be too many interest points detected. </p>   
+                </div>
+               
+               <div class="gallery">
+                    <div class="inline-image">
+                        <img src="output/paper/harris_corners_left1.jpeg" width=100%>
+                        <p>left</p>
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/paper/harris_corners_right1.jpeg" width=100%>
+                        <p>Right</p>
+                    </div>
+                   <div class="inline-image">
+                        <img src="output/paper/harris_corners_left2.jpeg" width=100%>
+                        <p>left</p>
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/paper/harris_corners_right2.jpeg" width=100%>
+                        <p>Right</p>
+                    </div>
+                </div>
+                
+                <div class="narrative">
+                    <p>Step 2: Apply Adaptive Non-Maximal Suppression, in order to suppress the number of interest points. For each image, I pick the top 500 points only. </p>   
+                </div>
+                
+                <div class="gallery">
+                    <div class="inline-image">
+                        <img src="output/paper/anms_left1.jpeg" width=100%>
+                        <p>left</p>
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/paper/anms_right1.jpeg" width=100%>
+                        <p>Right</p>
+                    </div>
+                   <div class="inline-image">
+                        <img src="output/paper/anms_left2.jpeg" width=100%>
+                        <p>left</p>
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/paper/anms_right2.jpeg" width=100%>
+                        <p>Right</p>
+                    </div>
+                </div>
+                
+                <div class="narrative">
+                    <p>Step 3: Implement Feature Descriptor extraction + Feature Matching. For each 5x5 square within the 40x40 window, I picked the center pixel, which gives me an 8x8 patch. After getting descriptors, I applied feature matching technique, meaning to find pairs of features that look similar and are thus likely to be good matches: I reject the point if it is an outlier and return the points only if they are good matches. After a few experiment runs, I set the threshold to 0.3.</p>   
+                </div>
+                
+                <div class="gallery">
+                    <div class="inline-image">
+                        <img src="output/paper/match_left1.jpeg" width=100%>
+                        <p>left</p>
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/paper/match_right1.jpeg" width=100%>
+                        <p>Right</p>
+                    </div>
+                   <div class="inline-image">
+                        <img src="output/paper/match_left2.jpeg" width=100%>
+                        <p>left</p>
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/paper/match_right2.jpeg" width=100%>
+                        <p>Right</p>
+                    </div>
+                </div>
+                
+                <div class="narrative">
+                    <p>Step 4: RANSAC. The purpose of this step is to get ground truth correspondence points: to eliminate matched feature descriptor points returned from last step that are not actually corresponding pairs. For each iteration (500), I randomly select 4 points from the set to compute a homography matrix, assess whether or not it gives a good warping transformation and exclude it if not. </p>   
+                </div>
+                
+                <div class="gallery">
+                    <div class="inline-image">
+                        <img src="output/paper/ransac_left1.jpeg" width=100%>
+                        <p>left</p>
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/paper/ransac_right1.jpeg" width=100%>
+                        <p>Right</p>
+                    </div>
+                   <div class="inline-image">
+                        <img src="output/paper/ransac_left2.jpeg" width=100%>
+                        <p>left</p>
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/paper/ransac_right2.jpeg" width=100%>
+                        <p>Right</p>
+                    </div>
+                </div>
+                <div class="narrative">
+                    <p>Warp. With the correspondence points produced by previous steps, I am able to create warping transformations ···</p>   
+                </div>
+                
+                <div class="gallery">
+                    <div class="inline-image">
+                        <img src="output/paper/warped_1.jpg" width=100%>
+                        <p>Image 1</p>
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/paper/warped_2.jpg" width=100%>
+                        <p>Image 2</p>
+                    </div>
+                </div>
+                
+                <div class="narrative">
+                    <p>··· and successful Mosaics.</p> 
+                    <p><br></p>
+                </div>
+               
+                <img src="output/paper/mosaic_1.jpg" height=500px>
+
+                <img src="output/paper/mosaic_2.jpg" height=500px>
+                
+                <div class="narrative">
+                    <p><br></p>   
+                    <p>--- other example ---</p>   
+                </div>
+                
+                <div class="gallery">
+                    <div class="inline-image">
+                        <img src="input/cupboard_left.jpeg" width=100%>
+                        <p>Cupboard Left</p>
+                    </div>
+                    <div class="inline-image">
+                        <img src="input/cupboard_right.jpeg" width=100%>
+                        <p>Cupboard Right</p>
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="inline-image2">
+                        <img src="output/paper/harris_corners_cupboard_left.jpeg" width=100%>
+                        <p>Harris Points</p>
+                    </div>
+                    <div class="inline-image2">
+                        <img src="output/paper/anms_cupboard_left.jpeg" width=100%>
+                        <p>ANMS Points</p>
+                    </div>
+                    <div class="inline-image2">
+                        <img src="output/paper/match_cupboard_left.jpeg" width=100%>
+                        <p>Matched Descriptor Points</p>
+                    </div>
+                    <div class="inline-image2">
+                        <img src="output/paper/ransac_cupboard_left.jpeg" width=100%>
+                        <p>RANSAC Points</p>
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="inline-image2">
+                        <img src="output/paper/harris_corners_cupboard_right.jpeg" width=100%>
+                        <p>Harris Points</p>
+                    </div>
+                    <div class="inline-image2">
+                        <img src="output/paper/anms_cupboard_right.jpeg" width=100%>
+                        <p>ANMS Points</p>
+                    </div>
+                    <div class="inline-image2">
+                        <img src="output/paper/match_cupboard_right.jpeg" width=100%>
+                        <p>Matched Descriptor Points</p>
+                    </div>
+                    <div class="inline-image2">
+                        <img src="output/paper/ransac_cupboard_right.jpeg" width=100%>
+                        <p>RANSAC Points</p>
+                    </div>
+                </div>
+                
+                <div class="gallery">
+                    <div class="image">
+                        <img src="output/paper/mosaic_3.jpg" width="60%">
+                       <p>Auto-Stitching</p>
+                    </div>
+                   
+                </div>
+                
+                
+                
+            </div>
+            <div class="part">
+                <h3>What I learned from the project</h3>
+                <div class="narrative">
+                    <p>For part A, a significant part that I learnt is that after multiplying the homography matrix (or its inverse, if doing inverse warping) with the coordinate matrix (x, y, 1), it is important to divide the resulting matrix warp by warp[-1], the bottom row, to ensure homogeneity. If not, the even though i could get correct homography matrix, my warping transformation can be a mess.</p>   
+                    <p>For part B, I learnt that each method/package (e.g. matplotlib.pyplot, skimage.feature) could interpret coordinates differently: some see it as (column, row), while some see it as (x, y), which are contrary. It caused me a significant amount of time to debug my code because I failed to incorporate the coordinate representation at first.</p>
+                </div>
+                 <img src="input/margin.jpg" height=100px>
+            </div>
+            
+            
+        </div>
+    </body>
+</html>

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html> 
+    <head> 
+        <title>cs194project4</title>
+        <style>
+            *{
+                font-family: "Courier New", Courier, monospace;
+            }
+            .heading {
+                margin-top: 80px;
+                margin-bottom: 80px;
+                text-align: center;
+            } 
+            .content{
+                margin-top: 50px;
+                margin-bottom: 50px;
+                
+            }
+            .part {
+                text-align: center;
+                margin-bottom: 70px;
+            }
+            .gallery {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-top: 80px;
+                margin-bottom: 80px;
+            }
+            .gallery-container {
+                margin-top: 60px;
+                margin-bottom: 100px;
+            }
+            .smaller-gallery-container {
+                margin-top: 30px;
+                margin-bottom: 30px;
+            }
+            .grid {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .inline-image{
+                width:33.3%;
+            }
+            .inline-image2{
+                width:16.7%;
+            }
+            .gif {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            
+            .narrative {
+                padding-left: 100px;
+                padding-right: 100px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                line-height: 150%;
+            }
+            
+            
+        </style>
+    </head>
+    <body>
+        <div class="heading">
+        <h2>CompSci 194 - Facial Keypoint Detection with Neural Networks</h2> 
+            
+        <p>"Use neural networks to automatically detect facial keypoints. "</p>
+            <div class="gallery">
+                    <div class="inline-image">
+                        <img src="database/33-1m.jpg" width="100%">
+                        <p>Front</p>
+                    </div>
+                    <div class="inline-image">
+                        <img src="database/35-6f.jpg" width="100%">
+                        <p>Laughing</p>
+                    </div>
+                    <div class="inline-image">
+                        <img src="database/39-6m.jpg" width="100%">
+                        <p>Side</p>
+                    </div>
+                </div>
+        </div>
+        
+        <div class="content">
+            <div class="part">
+                <h3>Part 1. Nose Tip Detection</h3>
+                <div class="narrative">
+                    <p>In part 1, I used 240 facial images of 40 persons from the IMM Face Database. Each person has 6 facial images in different viewpoints and facial expressions.</p>
+                </div>
+                <div class="grid">
+                    <div class="inline-image">
+                        <img src="database/01-1m.jpg" width="100%">
+                        <p>1</p>
+                    </div>
+                    <div class="inline-image">
+                        <img src="database/01-2m.jpg" width="100%">
+                        <p>2</p>
+                    </div>
+                    <div class="inline-image">
+                        <img src="database/01-3m.jpg" width="100%">
+                        <p>3</p>
+                    </div>
+                    <div class="inline-image">
+                        <img src="database/01-4m.jpg" width="100%">
+                        <p>4</p>
+                    </div>
+                    <div class="inline-image">
+                        <img src="database/01-5m.jpg" width="100%">
+                        <p>5</p>
+                    </div>
+                    <div class="inline-image">
+                        <img src="database/01-6m.jpg" width="100%">
+                        <p>6</p>
+                    </div>
+                </div>
+                
+                <div class="narrative">
+                    <p>The task is to detect the coordinates of the nose tip from each facial images. Below is an example of facial image displayed along with nose tip ground-truth annotation from my training dataloader. </p>   
+                </div>
+                
+                <div class="grid">
+                    <div class="image">
+                        <img src="output/nosetip/given_nose_points.png" height="300px">
+                    </div>
+                </div>
+                
+                <div class="narrative">
+                    <p>Each image is converted into grayscale and image pixel values are normalized float values in range -0.5 to 0.5. After that, images are resized into smaller size -> 80x60. I used (torch.nn.MSELoss) as the loss function, and Adam (torch.optim.Adam) as my optimizer, with a learning rate of 1e-3. Training loop is ran for 25 epochs.</p>
+                    <p>I used a 3 layered Convolutional Neural Network. The loss during each epoch is shown below: </p>   
+                </div>
+                <div class="grid">
+                    <div class="image">
+                        <img src="output/cnn1.jpg" height="300px">
+                    </div>
+                    <div class="image">
+                        <img src="output/margin.jpg" height="300px">
+                    </div>
+                    <div class="image">
+                        <img src="output/loss_visualization.jpg" height="300px">
+                    </div>
+                </div>
+                
+                <div class="narrative">
+                    <p>For almost all my failure cases, the persons in the image are either tilting their head towards the side, or making a strong facial expression. If not, the lighting is poor, resulting in obscuring shadows in the background. I believe those factors are interfering with my predictions.</p>   
+                </div>
+                
+                
+                <div class="narrative">
+                    <p>-- success cases: successful predictions of nosetip -- </p>   
+                </div>
+                
+                <div class="grid">
+                    <div class="inline-image">
+                        <img src="output/nosetip_results/25.jpg" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/nosetip_results/26.jpg" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/nosetip_results/27.jpg" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/nosetip_results/28.jpg" width="100%">  
+                    </div>
+                </div>
+                
+                <div class="narrative">
+                    <p>-- failure cases: unsuccessful predictions of nosetip -- </p>   
+                </div>
+                
+                <div class="grid">
+                    <div class="inline-image">
+                        <img src="output/nosetip_results/2.jpg" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/nosetip_results/17.jpg" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/nosetip_results/18.jpg" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/nosetip_results/41.jpg" width="100%">  
+                    </div>
+                </div>
+                
+                
+            </div>
+            
+            <div class="part">
+                <h3>Part 2. Full Facial Keypoints Detection</h3>
+                <div class="narrative">
+                    <p>For part 2, instead of trying to predict the coordinates of people's nosetips, the task is to predict the all 58 facial keypoints. The input images are resized to 160x120. </p>
+                    <p>In order to prevent the model from overfitting, I applied data augmentation techniques: randomly rotating the train set images for -10 to 10 degrees, and randomly shifting the face for -10 to 10 pixels.</p>
+                </div>
+                <div class="gallery">
+                    <div class="inline-image">
+                        <img src="output/fullface_da/3.jpg" width=100%>
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/fullface_da/1.jpg" width=100%>
+                    </div>
+                </div>
+                
+                <div class="narrative">
+                    <p> Same as part 1, loss function = (torch.nn.MSELoss), and optimizer = Adam (torch.optim.Adam), with a learning rate of 1e-3. I ran training loops for 25 epochs.</p>
+                    <p>The architecture of the 5-layered Convolutional Neural Network and loss during each training epoch are visualized below: </p>
+                </div>
+                
+                <div class="grid">
+                    <div class="image">
+                        <img src="output/cnn2.jpg" height="300px">
+                    </div>
+                    <div class="image">
+                        <img src="output/margin.jpg" height="300px">
+                    </div>
+                    <div class="image">
+                        <img src="output/loss_visualization_2.jpg" height="300px">
+                    </div>
+                </div>
+                
+                <div class="narrative">
+                    <p>Below are a few successful and unsuccessful predictions. In general, I'm not satisfied with my results, and I think it is due to the fact that there are too many confounding factors in each image that disrupt the model, especially given that it is too small a dataset for such a prediction. For failure cases, the persons are mostly facing sideways.</p>   
+                </div>
+                
+                
+                <div class="narrative">
+                    <p>-- success cases: successful predictions of facial keypoints -- </p>   
+                </div>
+                
+                <div class="grid">
+                    <div class="inline-image">
+                        <img src="output/fullface_results/3.jpg" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/fullface_results/10.jpg" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/fullface_results/30.jpg" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/fullface_results/22.jpg" width="100%">  
+                    </div>
+                </div>
+                
+                <div class="narrative">
+                    <p>-- failure cases: unsuccessful predictions of facial keypoints -- </p>   
+                </div>
+                
+                <div class="grid">
+                    <div class="inline-image">
+                        <img src="output/fullface_results/32.jpg" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/fullface_results/23.jpg" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/fullface_results/9.jpg" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/fullface_results/5.jpg" width="100%">  
+                    </div>
+                </div>
+                
+                <div class="narrative">
+                    <p>-- 1st convolutional layer filters visualized --</p>   
+                </div>
+                
+                <div class="grid">
+                    <div class="inline-image">
+                        <img src="output/filters/0.jpg" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/filters/1.jpg" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/filters/2.jpg" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/filters/3.jpg" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/filters/4.jpg" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/filters/5.jpg" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/filters/6.jpg" width="100%">  
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="inline-image">
+                        <img src="output/filters/7.jpg" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/filters/8.jpg" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/filters/9.jpg" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/filters/10.jpg" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/filters/11.jpg" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/filters/12.jpg" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/filters/13.jpg" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/filters/14.jpg" width="100%">  
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="part">
+                <h3>Part 3. Train with Larger Dataset</h3>
+                
+                <div class="narrative">
+                    <p>"During training, we need to crop the image and feed only the face portion. You need to use bounding boxes to do the image cropping. Resize the crop into 224x224, and remember to update the keypoints coordinate as well.</p>
+                </div>
+                
+                <div class="narrative">
+                    <p>-- samples from the train dataloader: applied with data-augmentation techniques --</p>   
+                </div>
+                
+                <div class="grid">
+                    <div class="inline-image">
+                        <img src="output/part3/sample/download.png" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/part3/sample/download%20(1).png" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/part3/sample/download%20(2).png" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/part3/sample/download%20(3).png" width="100%">  
+                    </div>
+                </div>
+                
+                <div class="narrative">
+                    <p>This dataset contains 6666 images of varying image sizes, and each image has 68 annotated facial keypoints. </p>
+                     <p> My loss function for part 3 is also (torch.nn.MSELoss), and optimizer = Adam (torch.optim.Adam), with a learning rate of 1e-3. I ran training loops for 10 epochs because it is extremely slow to process 1 loop even using GPU.</p>
+                    <p>I used ResNet18 as my CNN structure, with some parameter modifications: </p>
+                </div>
+                
+                <div class="grid">
+                    <div class="image">
+                        <img src="output/part3/results/net1.png" width="600px">
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="image">
+                        <img src="output/part3/results/net2.png" width="600px">
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="image">
+                        <img src="output/part3/results/net3.png" width="600px">
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="image">
+                        <img src="output/part3/results/net4.png" width="600px">
+                    </div>
+                </div>
+                <div class="narrative">
+                    <p>The loss of running on training dataloader and validation loader during each epoch is:</p>
+                </div>
+                <div class="grid">
+                    <div class="image">
+                        <img src="output/part3/results/loss.png" height="400px">
+                    </div>
+                </div>
+                <div class="narrative">
+                    <p>After the training session, here are a few examples of facial keypoints predictions from the test set using the trained net:</p>
+                </div>
+                
+                <div class="grid">
+                    <div class="inline-image">
+                        <img src="output/part3/results/test0.png" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/part3/results/test1.png" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/part3/results/test2.png" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/part3/results/test3.png" width="100%">  
+                    </div>
+                     <div class="inline-image">
+                        <img src="output/part3/results/test4.png" width="100%">  
+                    </div>
+                </div>
+                
+                <div class="narrative">
+                    <p>Also some predictions from my own photo collection. The predictions are not ideal, probably because of resolution / cropping issues.</p>
+                </div>
+                
+                <div class="grid">
+                    <div class="inline-image">
+                        <img src="output/part3/results/collection1.png" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/part3/results/collection2.png" width="100%">  
+                    </div>
+                    <div class="inline-image">
+                        <img src="output/part3/results/collection3.png" width="100%">  
+                    </div>
+                    
+                </div>
+              
+                 
+            </div>
+            
+
+            
+        </div>
+    </body>
+</html>

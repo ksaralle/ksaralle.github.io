@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html> 
+<head> 
+    <!-- Information about the page -->
+    <!--This is the comment tag-->
+    <title>project2</title> 
+    <style> 
+        *{
+            font-family: "Courier New", Courier, monospace;
+        }
+        .heading {
+            margin: 30px;
+            text-align: center;
+        } 
+        .content{
+            margin: 50px;
+        }
+        .subpart { 
+            background-color: #EFF5FD; 
+            text-align: center;
+            padding: 25px;
+            margin-bottom: 10px;
+        } 
+        .gallery {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .image {
+            margin: 10px;
+        }
+        .narrative {
+            padding-left: 100px;
+            padding-right: 100px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+    </style> 
+</head> 
+<body> 
+    <div class="heading">
+        <h2>CompSci 194 - Project 2 Filters and Frequency</h2> 
+    </div>
+    <div class="content">
+        <div class="part">
+            <div class="subpart">
+                <h3>Part 1.1 - Finite Difference Operator</h3> 
+                <div class="narrative">
+                    <p>To compute the gradient magnitude image, I calculate the square of the images convolved with Dx and Dy, sum them up and take the square root of it. The threshold for edge image is 0.19. All pixels with value larger than the threshold is converted to 1, whereas others converted to 0. </p>
+                </div>
+                <div class="gallery">
+                    <div class="image">
+                        <img src="output/1.1/cameraman_dx.png" style="width:200px; height:200px;">
+                        <p>Convolved with Dx</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/1.1/cameraman_dy.png" style="width:200px; height:200px;">
+                        <p>Convolved with Dy</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/1.1/cameraman_gradient.png" style="width:200px; height:200px;">
+                        <p>Gradient Image</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/1.1/cameraman_edge.png" style="width:200px; height:200px;">
+                        <p>Edge Image</p>
+                    </div>
+                </div>
+            </div>
+            <div class="subpart">
+                <h3>Part 1.2 - Derivative of Gaussian (DoG) Filter</h3> 
+                <div class="narrative">
+                    <p>Method 1: Blur the image using Gaussian Filter, before applying Dx, Dy operators.</p>
+                    <p><b>Threshold for edge binarization: 0.05</b></p>
+                    <p><b>Gaussian kernel parameters: ksize = 9, sigma = 2</b></p>
+                    <p>Compared with the results I got in part 1.1, the edges here are amplified. It's clearer to see the edges as shown in the finalized edge image.</p>
+                </div>
+                <div class="gallery">
+                    <div class="image">
+                        <img src="output/1.2/gaussian_blurred_cameraman.png" width="200px">
+                        <p>Gaussian Blurred Image</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/1.2/1_x_gaussian_blurred_cameraman.png" width="200px">
+                        <p>then convolved with Dx</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/1.2/1_y_gaussian_blurred_cameraman.png" width="200px">
+                        <p>convolved with Dy</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/1.2/1_gradient_gaussian_blurred_cameraman.png" width="200px">
+                        <p>Gradient Image</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/1.2/1_edge_gaussian_blurred_cameraman.png" width="200px">
+                        <p>Finalized Edge Image</p>
+                    </div>
+                </div>
+                <div class="narrative">
+                    <p>Method 2: Convolve the gaussian Filter with Dx and Dy, then apply the convolved filters to the image.</p>
+                </div>
+                <div class="gallery">
+                    <div class="image">
+                        <img src="output/1.2/2_x_gaussian_filter.png" style="width:150px; height:150px;">
+                        <p>A. Gaussian convolved with Dx/p>
+                    </div>
+                    <div class="image">
+                        <img src="output/1.2/2_y_gaussian_filter.png" style="width:150px; height:150px;">
+                        <p>B. Gaussian convolved with Dy</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/1.2/2_x_gaussian_filter_result.png" style="width:150px; height:150px;">
+                        <p>C. Image convolved with A</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/1.2/2_y_gaussian_filter_result.png" style="width:150px; height:150px;">
+                        <p>D. Image convolved with B</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/1.2/2_gradient_gaussian_filter_result.png" style="width:150px; height:150px;">
+                        <p>E. Gradient Image of C and D</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/1.2/2_edge_gaussian_filter_cameraman.png" style="width:150px; height:150px;">
+                        <p>F. Finalized Edge Image</p>
+                    </div>
+                </div>
+                <div class="narrative">
+                    <p>As illustrated from the images above, method 1 and method 2 yield the same results.</p>
+                </div>
+            </div>
+            <div class="subpart">
+                <h3>Part 1.3 - Image Straightening</h3> 
+                <div class="narrative">
+                    <p>The Gaussian filter used in this case has a size of <b>9</b> and a sigma of <b>2</b>.</p>
+                </div>
+                <div class="gallery">
+                    <div class="image">
+                        <img src="output/1.3/straightened_facade.jpg" height="200px" >
+                        <p>Straightened "facade.jpg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/1.3/histogram_facade.jpg" height="200px" >
+                        <p>Histogram of Gradient Angles</p>
+                    </div>
+                </div>
+                <div class="narrative">
+                    <h4>- More Examples -</h4>
+                    <p>Below are the results of the algorithm run on other examples.</p>
+                </div>
+                <div class="gallery">
+                    <div class="image">
+                        <img src="input/window.jpg" height="270px" width="200px">
+                        <p>"window.jpg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/1.3/straightened_window.jpg" height="270px" width="200px">
+                        <p>Straightened</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/1.3/histogram_window.jpg" height="270px" >
+                        <p>Angles</p>
+                    </div>
+                </div>
+                
+                <div class="gallery">
+                    <div class="image">
+                        <img src="input/vine.jpg" height="270px" width="200px">
+                        <p>"vine.jpg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/1.3/straightened_vine.jpg" height="270px" width="200px">
+                        <p>Straightened</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/1.3/histogram_vine.jpg" height="270px" >
+                        <p>Angles</p>
+                    </div>
+                </div>
+                <div class="narrative">
+                    <h4>- Failure Case -</h4>
+                    <p>
+                        I have also included a failure case of this algorithm. It not only failed at straightening the face, but further tilted it towards the wrong direction. My speculation of the reason behind this is that human face has no straight lines or perpendicular angles, therefore there is nothing for the algorithm to work with in the image.
+                    </p>
+                </div>
+                
+                <div class="gallery">
+                    <div class="image">
+                        <img src="input/face.jpg" height="270px" width="200px">
+                        <p>"face.jpg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/1.3/straightened_face.jpg" height="270px" width="200px">
+                        <p>Straightened</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/1.3/histogram_face.jpg" height="270px">
+                        <p>Angles</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="part">
+            <div class="subpart">
+                <h3>Part 2.1 - Image "Sharpening"</h3>
+                <div class="narrative">
+                    <h4>- Step by Step -</h4>
+                    <p>
+                       My first attempt at sharpening the image is a step by step approach. I used Gaussian Filter  to blur the image, subtract it from the original image to get the high frequency portion. Then I added the high frequency portion (amplified by alpha) to the original image, getting a sharpened version. In summary: Sharpened Image = Original Image + alpha * (Original Image - Blurred Image). 
+                    </p>
+                    <p>"taj.jpg", Gaussian Filter (ksize = 9, sigma = 1), alpha = 3</p>
+                </div>
+                <div class="gallery">
+                    <div class="image">
+                        <img src="input/taj.jpg" height="200px" width="200px">
+                        <p>Original Image</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.1/blurred_taj.jpg" height="200px" width="200px">
+                        <p>Gaussian Blurred Image</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.1/high_freq_taj.jpg" height="200px" width="200px">
+                        <p>High Frequency</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.1/sharpened_taj.jpg" height="200px" width="200px">
+                        <p>Sharpened Image</p>
+                    </div>
+                </div>
+                <div class="narrative">
+                    <p>"helsinki.jpg", Gaussian Filter (ksize = 9, sigma = 5), alpha = 4</p>
+                </div>
+                <div class="gallery">
+                    <div class="image">
+                        <img src="input/helsinki.jpg" height="200px" width="270px">
+                        <p>Original Image</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.1/blurred_helsinki.jpg" height="200px" width="270px">
+                        <p>Gaussian Blurred Image</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.1/high_frequency_helsinki.jpg" height="200px" width="270px">
+                        <p>High Frequency</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.1/sharpened_helsinki.jpg" height="200px" width="270px">
+                        <p>Sharpened Image</p>
+                    </div>
+                </div>
+                
+                <div class="narrative">
+                    <h4>- Unsharp Filter -</h4>
+                    <p>The above process is equivalent as constructing an unsharp filter and applying it to the image. Unsharp Filter = (1+alpha) * Unit Impulse Filter - alpha * Low Pass Filter</p>
+                </div>
+                <div class="gallery" border="solid">
+                    <div class="image">
+                        <img src="input/taj.jpg" height="200px" width="200px">
+                        <p>"taj.jpg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.1/unsharp_filtered_taj.jpg" height="200px" width="200px">
+                        <p>Sharpened using Unsharp Filter</p>
+                    </div>
+                    <div class="image">
+                        <img src="input/helsinki.jpg" height="200px" width="270px">
+                        <p>"helsinki.jpg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.1/unsharp_filtered_helsinki.jpg" height="200px" width="270px">
+                        <p>Sharpened using Unsharp Filter</p>
+                    </div>
+                </div>
+                <div class="narrative">
+                    <p>Other examples.</p>
+                </div>
+                <div class="gallery">
+                    <div class="image">
+                        <img src="input/london.jpg" height="200px" width="250px">
+                        <p>"london.jpg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.1/unsharp_filtered_london.jpg" height="200px" width="250px">
+                        <p>Sharpened</p>
+                    </div>
+                    <div class="image">
+                        <img src="input/tokyo.jpg" height="200px" width="250px">
+                        <p>"tokyo.jpg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.1/unsharp_filtered_tokyo.jpg" height="200px" width="250px">
+                        <p>Sharpened</p>
+                    </div>
+                </div>
+                <div class="narrative">
+                    <p>For experiment, I blurred an image and tried to sharpen it again. However, the high frequencies are lost in the process, and the resharpened image is not the same as the original image. </p>
+                </div>
+                <div class="gallery">
+                    <div class="image">
+                        <img src="input/paris.jpg" height="250px" width="350px">
+                        <p>"paris.jpg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.1/blurred_paris.jpg" height="250px" width="350px">
+                        <p>Blurred "paris.jpg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.1/resharpened_paris.jpg" height="250px" width="350px">
+                        <p>Resharpened "paris.jpg"</p>
+                    </div>
+                </div>
+            </div>
+            <div class="subpart">
+                <h3>Part 2.2 - Hybrid Images</h3> 
+                <div class="narrative">
+                    <p>Below are a few examples of the hybrid image results I generated using the described method.</p>
+                </div>
+                <div class="gallery">
+                    <div class="image">
+                        <img src="input/DerekPicture.jpg" height="300px" >
+                        <p>"DerekPicture.jpg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="input/nutmeg.jpg" height="300px" >
+                        <p>"nutmeg.jpg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.2/derek_nutmeg.jpg" height="300px">
+                        <p>Hybrid</p>
+                    </div>
+                </div>
+                <div class="gallery">
+                    <div class="image">
+                        <img src="input/dog.jpg" height="200px">
+                        <p>"dog.jpg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="input/kitten.jpg" height="200px">
+                        <p>"kitten.jpg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.2/dog_kitten.jpg" height="200px">
+                        <p>Hybrid</p>
+                    </div>
+                </div>
+                <div class="gallery">
+                    <div class="image">
+                        <img src="input/hulk.jpg" height="200px">
+                        <p>"hulk.jpg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="input/cat.jpg" height="200px">
+                        <p>"cat.jpg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.2/hulk_cat.jpg" height="200px">
+                        <p>Hybrid</p>
+                    </div>
+                </div>
+                <div class="narrative">
+                    <p>There are also failure cases. For example, the image below is a terrible hybrid because the figures in original images have completely different postures that are barely overlapping when images are aligned. The combined result is not optimal.</p>
+                </div>
+                <div class="gallery">
+                    <div class="image">
+                        <img src="input/collins.jpg" height="200px">
+                        <p>"dog.jpg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="input/cat.jpg" height="200px">
+                        <p>"kitten.jpg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.2/collins_kitten.jpg" height="200px">
+                        <p>Hybrid</p>
+                    </div>
+                </div>
+                <div class="narrative">
+                    <p>Example 3 and the corresponding log magnitude of the Fourier transform are shown below. At first, the high frequency portion is too dim that even at a small distance, I can hardly see its shape. I intended to blur the low frequency portion harder and amplify the high frequency portion. After a few experiments, I am satisfied with the results I get at sigma(low-freq) = 13, sigma(high-freq) = 15 with a Gaussian filter size(ksize) of 15.</p>
+                </div>
+                <div class="gallery">
+                    <div class="image">
+                        <img src="input/madhatter.jpg"  width="200px">
+                    </div>
+                    <div class="image">
+                        <img src="input/harley.jpg" width="200px">
+                    </div>
+                    <div class="image">
+                        <img src="output/2.2/madhatter_low.jpg"  width="200px">
+                    </div>
+                    <div class="image">
+                        <img src="output/2.2/harley_high.jpg" width="200px">
+                    </div>
+                    <div class="image">
+                        <img src="output/2.2/madhatter_harley.jpg" width="200px">
+                    </div>
+                </div>
+               
+                <div class="gallery">
+                    <div class="image">
+                        <img src="output/2.2/fourier_madhatter.jpg" width="200px">
+                        <p>"madhatter.jpg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.2/fourier_harley.jpg" width="200px">
+                        <p>"harley.jpg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.2/fourier_madhatter_low.jpg" width="200px">
+                        <p>Low-Freq Portion</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.2/fourier_harley_high.jpg" width="200px">
+                        <p>High-Freq Portion</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.2/fourier_hybrid.jpg" width="200px">
+                        <p>Hybrid</p>
+                    </div>
+                </div>
+            </div>
+            <div class="subpart">
+                <h3>Part 2.3 - Gaussian and Laplacian Stacks</h3> 
+                <p>Gaussian Stack,  N = 5</p>
+                <div class="gallery">
+                    <div class="image">
+                        <img src="output/2.3/lincoln_gaussian_0.jpg" width="200px">
+                        <p>level = 0</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.3/lincoln_gaussian_1.jpg" width="200px">
+                        <p>level = 1</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.3/lincoln_gaussian_2.jpg" width="200px">
+                        <p>level = 2</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.3/lincoln_gaussian_3.jpg" width="200px">
+                        <p>level = 3</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.3/lincoln_gaussian_4.jpg" width="200px">
+                        <p>level = 4</p>
+                    </div>
+                </div>
+                <p>Laplacian Stack,  N = 5</p>
+                <div class="gallery">
+                    <div class="image">
+                        <img src="output/2.3/lincoln_laplacian_0.jpg" width="200px">
+                        <p>level = 0</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.3/lincoln_laplacian_1.jpg" width="200px">
+                        <p>level = 1</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.3/lincoln_laplacian_2.jpg" width="200px">
+                        <p>level = 2</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.3/lincoln_laplacian_3.jpg" width="200px">
+                        <p>level = 3</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.3/lincoln_laplacian_4.jpg" width="200px">
+                        <p>level = 4</p>
+                    </div>
+                </div>
+                <div class="narrative">
+                    <p>Generate Gaussian and Laplacian stacks of the hybrid image "Hulk.jpg" + "cat.jpg", using N = 5 and a Gaussian Kernel of size 9 and sigma 5.</p>
+                </div>
+                <p>Laplacian Stack,  N = 5</p>
+                <div class="gallery">
+                    <div class="image">
+                        <img src="output/2.3/hybrid_gaussian_0.jpg" width="200px">
+                        <p>level = 0</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.3/hybrid_gaussian_1.jpg" width="200px">
+                        <p>level = 1</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.3/hybrid_gaussian_2.jpg" width="200px">
+                        <p>level = 2</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.3/hybrid_gaussian_3.jpg" width="200px">
+                        <p>level = 3</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.3/hybrid_gaussian_4.jpg" width="200px">
+                        <p>level = 4</p>
+                    </div>
+                </div>
+                <p>Laplacian Stack, N = 5</p>
+                <div class="gallery">
+                    <div class="image">
+                        <img src="output/2.3/hybrid_laplacian_0.jpg" width="200px">
+                        <p>level = 0</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.3/hybrid_laplacian_1.jpg" width="200px">
+                        <p>level = 1</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.3/hybrid_laplacian_2.jpg" width="200px">
+                        <p>level = 2</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.3/hybrid_laplacian_3.jpg" width="200px">
+                        <p>level = 3</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.3/hybrid_laplacian_4.jpg" width="200px">
+                        <p>level = 4</p>
+                    </div>
+                </div>
+            </div>
+            <div class="subpart">
+                <h3>Part 2.4 - Multiresolution Blending</h3> 
+                <div class="narrative">
+                    <p> To create a blend of image A and B, I first built a mask (of only 0s and 1s), and computed the mask's Gaussian Stack. Then I constructed the laplacian stacks of images A and B. The blend of images is created by combining the results of their respective laplacian stacks according to weights given by the Gaussian stacks of the mask. </p>
+                    <p>The oraple is constructed using a horizontal regular mask, with 1s on the left and 0s on the right. </p>
+                        <p>N = 20, Gaussian stack: ksize = 10, sigma = 30, Laplacian stack: ksize = 30, sigma = 30.</p>
+                </div>
+                <div class="gallery">
+                    <div class="image">
+                        <img src="input/apple.jpeg" width="230px">
+                        <p>"apple.jpeg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="input/orange.jpeg" width="230px">
+                        <p>"orange.jpeg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.4/horizontal_regular_mask.jpg" width="230px">
+                        <p>Regular Mask</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.4/oraple.jpg" width="230px">
+                        <p>oraple!</p>
+                    </div>
+                </div>
+                <div class="narrative">
+                    <p>The starry night blend is created using a vertical regular mask, with 1s on the bottom and 0s on the top. Of course, before the blending process, I had resized the two images to the same size.</p>
+                        <p>N = 20, Gaussian stack: ksize = 10, sigma = 30, Laplacian stack: ksize = 30, sigma = 30.</p>
+                </div>
+                <div class="gallery">
+                    <div class="image">
+                        <img src="input/night.jpg" width="230px">
+                        <p>"night.jpg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="input/sky.jpg" width="230px">
+                        <p>"sky.jpg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.4/vertical_regular_mask.jpg" width="230px">
+                        <p>Regular Mask</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.4/night_sky.jpg" width="230px">
+                        <p>A Starry Night</p>
+                    </div>
+                </div>
+                <div class="narrative">
+                    <p>To blend the eye and the nebula image, I created an irregular mask of the shape of a circle. In preparation, I wrote some extra image-align helper functions that helped me aligned both the mask and the nebula image to the eye image, so that all three of them 1. have the same image size 2. the area to be blended are at the same location of each image.  </p>
+                    <p>N = 20, Gaussian stack: ksize = 10, sigma = 30, Laplacian stack: ksize = 30, sigma = 30.</p>
+                </div>
+                <div class="gallery">
+                    <div class="image">
+                        <img src="input/eye.jpg" width="230px">
+                        <p>"eye.jpg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="input/nebula.jpg" width="230px">
+                        <p>"nebula.jpg"</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.4/mask_aligned.jpg" width="230px">
+                        <p>Irregular Mask (circle)</p>
+                    </div>
+                    <div class="image">
+                        <img src="output/2.4/eye_nebula.jpg" width="230px">
+                        <p>Nebula in the Eye</p>
+                    </div>
+                </div>
+                
+                <div class="narrative">
+                    <p>The full laplacian stack of blending the two images according to gaussian pyramids: "night.jpg" + "sky.jpg"</p>
+                </div>
+                <div class="gallery">
+                    <img src="output/2.4/eye_nebula_0.jpg" width="20%">
+                    <img src="output/2.4/eye_nebula_1.jpg" width="20%">
+                    <img src="output/2.4/eye_nebula_2.jpg" width="20%">
+                    <img src="output/2.4/eye_nebula_3.jpg" width="20%">
+                    <img src="output/2.4/eye_nebula_4.jpg" width="20%">
+                </div>
+                <div class="gallery">
+                    <img src="output/2.4/eye_nebula_5.jpg" width="20%">
+                    <img src="output/2.4/eye_nebula_6.jpg" width="20%">
+                    <img src="output/2.4/eye_nebula_7.jpg" width="20%">
+                    <img src="output/2.4/eye_nebula_8.jpg" width="20%">
+                    <img src="output/2.4/eye_nebula_9.jpg" width="20%">
+                </div>
+                <div class="gallery">
+                    <img src="output/2.4/eye_nebula_10.jpg" width="20%">
+                    <img src="output/2.4/eye_nebula_11.jpg" width="20%">
+                    <img src="output/2.4/eye_nebula_12.jpg" width="20%">
+                    <img src="output/2.4/eye_nebula_13.jpg" width="20%">
+                    <img src="output/2.4/eye_nebula_14.jpg" width="20%">
+                </div>
+                <div class="gallery">
+                    <img src="output/2.4/eye_nebula_15.jpg" width="20%">
+                    <img src="output/2.4/eye_nebula_16.jpg" width="20%">
+                    <img src="output/2.4/eye_nebula_17.jpg" width="20%">
+                    <img src="output/2.4/eye_nebula_18.jpg" width="20%">
+                    <img src="output/2.4/eye_nebula_19.jpg" width="20%">
+                </div>
+            </div>
+        </div>
+    </div>
+</body> 
+</html> 
