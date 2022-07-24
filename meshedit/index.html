@@ -3,7 +3,7 @@
     <head>
         <title>cs184project2</title>
         <style>
-            *{
+            /* *{
                 font-family: "Courier New", Courier, monospace;
             }
             .heading {
@@ -61,93 +61,186 @@
                 padding-top: 10px;
                 padding-bottom: 10px;
                 line-height: 160%;
-            }
+            } */
+            @import url('https://fonts.googleapis.com/css2?family=Cuprum&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Advent+Pro:wght@100&family=Cuprum&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Advent+Pro:wght@100&family=Cuprum&family=Gochi+Hand&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Advent+Pro:wght@100&family=Cuprum&family=Gochi+Hand&family=Raleway:wght@100&display=swap');
+
+              .four{
+                padding:30px;
+              }
+              *{
+                  font-family: 'Raleway', sans-serif;
+              }
+              body {
+                padding-top: 100px;
+                padding-bottom: 100px;
+                text-align: left;
+                font-weight: 100;
+                font-size: 5;
+                color: #121212;
+              }
+              /* texts */
+              h1, h2 {
+                font-size: 40px;
+              }
+              h1, h2 {
+                padding: 20px;
+              }
+              h3, h4 {
+                padding: 30px;
+              }
+              .regular-text {
+                padding-left: 100px;
+                padding-right: 100px;
+                padding-top:20px;
+                padding-bottom: 20px;
+                line-height: 2;
+                font-size:17px;
+              }
+              .list{
+                line-height:2;
+                margin-left: 70px;
+                margin-right: 70px;
+                padding-left: 100px;
+                padding-right: 100px;
+                font-size:17px;
+              }
+              .footnote {
+                padding-bottom:20px;
+                font-size: 14px;
+              }
+              /* images */
+              .gallery {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-top: 80px;
+                margin-bottom: 80px;
+              }
+              .small-gallery-container {
+                  margin-top: 40px;
+                  margin-bottom: 30px;
+              }
+              .large-gallery-container {
+                margin-top: 50px;
+                margin-bottom: 50px;
+              }
+              .grid {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              }
+              .inline-image {
+                width: 33.3%;
+                text-align: center;
+              }
+              .inline-image-4 {
+                width: 25%;
+                text-align: center;
+              }
+              .inline-image-5 {
+                width: 20%;
+                text-align: center;
+              }
+              .image-container {
+                width: 40%;
+                text-align: center;
+                align-content: center;
+              }
+              .lecture {
+                margin-left: 100px;
+                margin-right: 20px;
+                text-align: center;
+              }
 
 
         </style>
     </head>
     <body>
         <div class="heading">
-        <h1>CompSci 184 - Project 2: MeshEdit</h1>
-				<div class="narrative">
-        	<p>"You will build Bezier curves and surfaces using de Casteljau algorithm,<br> manipulate triangle meshes represented by half-edge data structure, and implement loop subdivision."</p>
+        <h1 align="middle">MeshEdit</h1>
+
+				<div >
+        	<p class="regular-text" align="middle">"In this project, I built Bezier curves and surfaces using de Casteljau algorithm,<br> manipulate triangle meshes represented by half-edge data structure, and implement loop subdivision."</p>
 				</div>
 					  <div class="gallery">
                     <div class="inline-image">
                         <img src="images/cover/cover_0.png" width="100%" height="450px">
-                        <p>peter</p>
+                        <p class="footnote">peter</p>
                     </div>
                     <div class="inline-image">
                         <img src="images/cover/cover_1.png" width="100%" height="450px">
-                        <p>maxplanck</p>
+                        <p class="footnote">maxplanck</p>
                     </div>
                     <div class="inline-image">
                         <img src="images/cover/cover_2.png" width="100%" height="450px">
-                        <p>beast</p>
+                        <p class="footnote">beast</p>
                     </div>
             </div>
 				<div class="narrative">
-					<p>Overview: This project allows me to practice my understanding with graphics rendering in all of 1d, 2d and 3d space. I had a lot of fun drawing perfectly smooth bezier curves and surfaces, doing meticulous computation to create high-end shadings for 3d meshes that mimics real world objects, flipping and splitting mesh edges that aids the operation of mesh upsampling to achieve better display and more accurate simulation. By first-hand implementing all these geometric modeling techniques, I deepened my understanding with graphics rendering.</p>
+					<p class="regular-text">Overview: This project allows me to practice my understanding with graphics rendering in all of 1d, 2d and 3d space. I had a lot of fun drawing perfectly smooth bezier curves and surfaces, doing meticulous computation to create high-end shadings for 3d meshes that mimics real world objects, flipping and splitting mesh edges that aids the operation of mesh upsampling to achieve better display and more accurate simulation. By first-hand implementing all these geometric modeling techniques, I deepened my understanding with graphics rendering.</p>
 				</div>
 
         </div>
 
         <div class="content">
             <div class="part">
-							<div class="section-heading"><h2>Section I: Bezier Curves and Surfaces</h2></div>
+							<h2 align="middle">Section I: Bezier Curves and Surfaces</h2>
 
-                <h3>Part 1. Bezier curves with 1D de Casteljau subdivision</h3>
+                <h2 align="middle">Part 1. Bezier curves with 1D de Casteljau subdivision</h2>
                 <div class="narrative">
-                    <p>de Casteljau's algorithm is a technique for evaluating the optimal bezier curve for a given set of control points.  </p>
-										<p>For each two consecutive control points, we calculate an interpolated intermediate point with distances proportionate to t : (1-t) to each of them, using a predetermined ratio t. We repeat this procedure recursively on subdivisions until we have one final interpolation point. The bezier curve is computed with two endpoints in the initial set of control points and the final interpolation point.</p>
-										<p>In my implementation, I looped through all the control points up till the second last point, compute the interpolated intermediate point of the current point and the next point, and store the value into a C++ vector.</p>
+                    <p class="regular-text">de Casteljau's algorithm is a technique for evaluating the optimal bezier curve for a given set of control points.  </p>
+										<p class="regular-text">For each two consecutive control points, we calculate an interpolated intermediate point with distances proportionate to t : (1-t) to each of them, using a predetermined ratio t. We repeat this procedure recursively on subdivisions until we have one final interpolation point. The bezier curve is computed with two endpoints in the initial set of control points and the final interpolation point.</p>
+										<p class="regular-text">In my implementation, I looped through all the control points up till the second last point, compute the interpolated intermediate point of the current point and the next point, and store the value into a C++ vector.</p>
                 </div>
 								<div class="gallery">
                     <div class="inline-image">
                         <img src="images/part1/curve1.png" width=100% height=300px >
-												<p>Bezier curve 1</p>
+												<p class="footnote">Bezier curve 1</p>
                     </div>
                     <div class="inline-image">
                         <img src="images/part1/curve2.png" width=100% height=300px >
-												<p>Bezier curve 2</p>
+												<p class="footnote">Bezier curve 2</p>
                     </div>
                 </div>
 
                 <div class="narrative">
-                    <p> Here I created my own Bezier curve with 6 control points of my choosing. Below, there are screenshots of each step / level of the evaluation from the original control points down to the final evaluated point.   </p>
+                    <p class="regular-text"> Here I created my own Bezier curve with 6 control points of my choosing. Below, there are screenshots of each step / level of the evaluation from the original control points down to the final evaluated point.   </p>
                 </div>
 
 								<div class="grid">
                     <div class="inline-image">
                         <img src="images/part1/curve3_0.png" width="100%" height=320px>
-                        <p>0</p>
+                        <p class="footnote">0</p>
                     </div>
                     <div class="inline-image">
                         <img src="images/part1/curve3_1.png" width="100%" height=320px>
-                        <p>1</p>
+                        <p class="footnote">1</p>
                     </div>
                     <div class="inline-image">
                         <img src="images/part1/curve3_2.png" width="100%" height=320px>
-                        <p>2</p>
+                        <p class="footnote">2</p>
                     </div>
 								</div>
 								<div class="grid">
                     <div class="inline-image">
                         <img src="images/part1/curve3_3.png" width="100%" height=320px>
-                        <p>3</p>
+                        <p class="footnote">3</p>
                     </div>
                     <div class="inline-image">
                         <img src="images/part1/curve3_4.png" width="100%" height=320px>
-                        <p>4</p>
+                        <p class="footnote">4</p>
                     </div>
                     <div class="inline-image">
                         <img src="images/part1/curve3_5.png" width="100%" height=320px>
-                        <p>5</p>
+                        <p class="footnote">5</p>
                     </div>
                 </div>
 
 								<div class="narrative">
-                    <p>The final bezier curve defined by given parameters is:  </p>
+                    <p class="regular-text">The final bezier curve defined by given parameters is:  </p>
                 </div>
 
 								<div class="grid">
@@ -157,8 +250,8 @@
                 </div>
 
                 <div class="narrative">
-                    <p>I also tried moving control points around and modifying the parameter t via mouse scrolling.  </p>
-										<p>When I move the control points around, each layer of interpolation changes accordingly and the resulting bezier curve varies, as shown below. </p>
+                    <p class="regular-text">I also tried moving control points around and modifying the parameter t via mouse scrolling.  </p>
+										<p class="regular-text">When I move the control points around, each layer of interpolation changes accordingly and the resulting bezier curve varies, as shown below. </p>
 
                 </div>
 
@@ -172,7 +265,7 @@
                 </div>
 
 								<div class="narrative">
-										<p>However, when I only change the parameter t by scrolling my mouse, the bezier curve remains the same even if the final interpolation point is different.
+										<p class="regular-text">However, when I only change the parameter t by scrolling my mouse, the bezier curve remains the same even if the final interpolation point is different.
 										But no matter how it changes, it moves along the green bezier curve. </p>
 								</div>
 
@@ -193,7 +286,7 @@
 
             <div class="part">
 
-                <h3>Part 2. Bezier surfaces with separable 1D de Casteljau</h3>
+                <h2 align="middle">Part 2. Bezier surfaces with separable 1D de Casteljau</h2>
 
 								<div class="gallery">
                     <div class="inline-image">
@@ -205,11 +298,11 @@
                 </div>
 
                 <div class="narrative">
-                    <p>Computing bezier surfaces using de Casteljau's algorithm uses essentially the same logic as computing bezier curves. </p>
-										<p>	Instead of one single ratio t, we are given two ratio (u, v) to do interpolation.
+                    <p class="regular-text">Computing bezier surfaces using de Casteljau's algorithm uses essentially the same logic as computing bezier curves. </p>
+										<p class="regular-text">	Instead of one single ratio t, we are given two ratio (u, v) to do interpolation.
 											Think of the surface as multiple “moving curves”, where each curve can be determined using the bezier curves method described in part 1, but with interpolation ratio u. After having evaluated each “moving curve”, we can perform another de Casteljau recursive interpolation on these points using ratio v to determine the surface point position. </p>
 
-										<p>In bezierCurve.h, ControlPoints is a 2d vector.
+										<p class="regular-text">In bezierCurve.h, ControlPoints is a 2d vector.
 											For my implementation, I first looped through it to compute the final interpolated point for each sub-vector, aka determining each “moving curve”.
 											I store the value of these points in a temporary C++ vector, and perform another evaluate1D() on this temporary vector, whose result is the surface point position.</p>
 								</div>
@@ -221,14 +314,14 @@
 
 
             <div class="part">
-							<div class="section-heading"><h2>Section II: Triangle Meshes and Half-Edge Data Structure</h2></div>
+							<h2 align="middle">Section II: Triangle Meshes and Half-Edge Data Structure</h2>
 
-                <h3>Part 3. Area-weighted vertex normals</h3>
+                <h2 align="middle">Part 3. Area-weighted vertex normals</h2>
 
 								<div class="narrative">
-                    <p>In this part, we upgrade the mesh shading technique from default flat shading to the better-looking phong shading for mesh rendering,
+                    <p class="regular-text">In this part, we upgrade the mesh shading technique from default flat shading to the better-looking phong shading for mesh rendering,
 											which makes the objects surface appear smooth and less blocky. To achieve the effect of phong shading, we shade each pixel. The value of each pixel is deduced from neighboring vertices using barycentric interpolation, in terms of normal vectors. </p>
-										<p>We infer vertex normal vectors from surrounding triangle faces regarding their respective area. In my implementation of the area-weighted vertex normals, I constructed two loops nested. For each vertex, first loop through all the half-edges pointing away from it, where each half-edge corresponds to a surrounding face. Then, for each face that corresponds to the current half-edge, calculate its normal vector. This requires another loop to go through all the half-edges that circulate the area, in the default counterclockwise winding order. </p>
+										<p class="regular-text">We infer vertex normal vectors from surrounding triangle faces regarding their respective area. In my implementation of the area-weighted vertex normals, I constructed two loops nested. For each vertex, first loop through all the half-edges pointing away from it, where each half-edge corresponds to a surrounding face. Then, for each face that corresponds to the current half-edge, calculate its normal vector. This requires another loop to go through all the half-edges that circulate the area, in the default counterclockwise winding order. </p>
 								</div>
 
 
@@ -261,13 +354,13 @@
 													 <img src="images/part3/maxplanck_phong.jpeg" width="100%" height=270px>
 												</div>
                     </div>
-                    <p>Flat shading vs phong shading for teapot.dae, beetle.dae, cow.dae and maxplanck.dae.</p>
+                    <p class="regular-text">Flat shading vs phong shading for teapot.dae, beetle.dae, cow.dae and maxplanck.dae.</p>
                 </div>
 
 								<div class="narrative">
-										<p>My implementation for calculating the normal vectors:</p>
-										<p>The cross product of two vectors is the normal vector and the magnitude of this cross product is the area of the bounded parallelogram. Using this mathematic insight, I imitated the logic of “Vector3D normal( void ) const;” method provided in halfEdgeMesh.cpp, face class, to calculate the normal vector of a face, except for each face I don’t normalize the normal vector, but instead add them up directly, thereby preserving their original length that is at proportion to face areas.</p>
-										<p>At the end of my function, where I have all the normal vectors combined as one, I perform normalization on that vector and turn it into a unit vector. This is the area-weighted vertex normals.</p>
+										<p class="regular-text">My implementation for calculating the normal vectors:</p>
+										<p class="regular-text">The cross product of two vectors is the normal vector and the magnitude of this cross product is the area of the bounded parallelogram. Using this mathematic insight, I imitated the logic of “Vector3D normal( void ) const;” method provided in halfEdgeMesh.cpp, face class, to calculate the normal vector of a face, except for each face I don’t normalize the normal vector, but instead add them up directly, thereby preserving their original length that is at proportion to face areas.</p>
+										<p class="regular-text">At the end of my function, where I have all the normal vectors combined as one, I perform normalization on that vector and turn it into a unit vector. This is the area-weighted vertex normals.</p>
 								</div>
 
 
@@ -276,10 +369,10 @@
             </div>
 
 						<div class="part">
-                <h3>Part 4: Edge flip</h3>
+                <h2 align="middle">Part 4: Edge flip</h2>
 
 								<div class="narrative">
-									<p>Mesh rendering relies on the implementation of half-edges, edges, vertices and faces.
+									<p class="regular-text">Mesh rendering relies on the implementation of half-edges, edges, vertices and faces.
 										To do an edge flip is to do pointer reassignments on all of the affected mesh elements to make sure that the mesh renders as expected after the operation. (an illustration taken from the lecture slide: )</p>
 								</div>
 
@@ -289,9 +382,9 @@
 
 								<div class="narrative">
 
-										<p>Before writing any code, I drew a graph and labeled all vertices, edges, half-edges and faces. Using the “before and after” visualization, I did an exhaustive enumeration of all the mesh elements that I (might) need to do pointer reassignments: 4 vertices (v0, v1, v2, v3), 1 edge (e0), 6 half-edges (h0, h0_1, h0_2, in the first triangle, h1, h1_1, h1_2 in the second triangle) and 2 faces (f0, f1). </p>
-										<p>For each vertex, I update the half-edge pointer to any of the new half-edges coming out of the vertex; for each edge, I update the half-edge pointer to h0, and for each face, I update the half-edge pointer to their old respective value, but I feel like the edge and face part can be omitted and I included them just for the sake of implementation completeness; for each half-edge, I used setNeighbor() function to update their “next”, “twin”, “vertex”, “edge”, “face” pointers according to my graph. I update every pointer even though some of them remain the same despite the edge flip operation.</p>
-										<p>Some screenshots showing the effects of edge flip: </p>
+										<p class="regular-text">Before writing any code, I drew a graph and labeled all vertices, edges, half-edges and faces. Using the “before and after” visualization, I did an exhaustive enumeration of all the mesh elements that I (might) need to do pointer reassignments: 4 vertices (v0, v1, v2, v3), 1 edge (e0), 6 half-edges (h0, h0_1, h0_2, in the first triangle, h1, h1_1, h1_2 in the second triangle) and 2 faces (f0, f1). </p>
+										<p class="regular-text">For each vertex, I update the half-edge pointer to any of the new half-edges coming out of the vertex; for each edge, I update the half-edge pointer to h0, and for each face, I update the half-edge pointer to their old respective value, but I feel like the edge and face part can be omitted and I included them just for the sake of implementation completeness; for each half-edge, I used setNeighbor() function to update their “next”, “twin”, “vertex”, “edge”, “face” pointers according to my graph. I update every pointer even though some of them remain the same despite the edge flip operation.</p>
+										<p class="regular-text">Some screenshots showing the effects of edge flip: </p>
 
 								</div>
 
@@ -299,30 +392,30 @@
                      <div class="grid">
                          <div class="inline-image">
                             <img src="images/part4/teapot_0.jpeg" width="100%" height=270px>
-														<p>0</p>
+														<p class="footnote">0</p>
                          </div>
                          <div class="inline-image">
                             <img src="images/part4/teapot_1.jpeg" width="100%" height=270px>
-														<p>1</p>
+														<p class="footnote">1</p>
                          </div>
                          <div class="inline-image">
                             <img src="images/part4/teapot_2.jpeg" width="100%" height=270px>
-														<p>2</p>
+														<p class="footnote">2</p>
                          </div>
 												 <div class="inline-image">
                             <img src="images/part4/teapot_3.jpeg" width="100%" height=270px>
-														<p>3</p>
+														<p class="footnote">3</p>
                          </div>
 												 <div class="inline-image">
                             <img src="images/part4/teapot_4.jpeg" width="100%" height=270px>
-														<p>4</p>
+														<p class="footnote">4</p>
                          </div>
                     </div>
 								</div>
 
 								<div class="narrative">
-									<p>Comment on the results: Some triangles degenerate after doing edge flip; they look darker than they are supposed to. Some edge flip cannot be reverted because some flip will cause the edge to be in the same position as other existing edges.</p>
-									<p>Edge case: for the mesh that contains boundary, make sure the program does not crash. Below is an attempt to perform edge flip on the boundary for beetle.dae</p>
+									<p class="regular-text">Comment on the results: Some triangles degenerate after doing edge flip; they look darker than they are supposed to. Some edge flip cannot be reverted because some flip will cause the edge to be in the same position as other existing edges.</p>
+									<p class="regular-text">Edge case: for the mesh that contains boundary, make sure the program does not crash. Below is an attempt to perform edge flip on the boundary for beetle.dae</p>
 								</div>
 
 
@@ -330,15 +423,15 @@
                      <div class="grid">
                          <div class="inline-image">
                             <img src="images/part4/beetle_1_0.jpeg" width="100%" height=300px>
-														<p>before</p>
+														<p class="footnote">before</p>
                          </div>
                          <div class="inline-image">
                             <img src="images/part4/beetle_1_1.jpeg" width="100%" height=300px>
-														<p>after</p>
+														<p class="footnote">after</p>
                          </div>
                          <div class="inline-image">
                             <img src="images/part4/beetle_1_2.jpeg" width="100%" height=300px>
-														<p>flipped back</p>
+														<p class="footnote">flipped back</p>
                          </div>
                     </div>
 								</div>
@@ -347,21 +440,21 @@
 
 
 								<div class="narrative">
-									<p>Due to my implementation trick where I went to length to list and label all the mesh parts before writing any implementation code, and did exhaustive pointer assignment even for ones that should be the same before and after an edge flip, my program went smoothly and I did not encounter any bug the first time it ran! (except compile errors). </p>
+									<p class="regular-text">Due to my implementation trick where I went to length to list and label all the mesh parts before writing any implementation code, and did exhaustive pointer assignment even for ones that should be the same before and after an edge flip, my program went smoothly and I did not encounter any bug the first time it ran! (except compile errors). </p>
 								</div>
 
 
 								<div class="grid">
-														<img src="images/part4/implementation_trick.png" width="70%" >
+										<img src="images/part4/implementation_trick.png" width="70%" >
 								</div>
 
             </div>
 
 						<div class="part">
-								<h3>Part 5: Edge split</h3>
+								<h2 align="middle">Part 5: Edge split</h>
 
 								<div class="narrative">
-									<p>Edge split operation is, as described in the project specs, “given a pair of triangles (a,b,c) and (c,b,d), a split operation on their shared edge (b,c) inserts a new vertex m at its midpoint and connects the new vertex to each opposing vertex a and d, yielding four triangles. ”</p>
+									<p class="regular-text">Edge split operation is, as described in the project specs, “given a pair of triangles (a,b,c) and (c,b,d), a split operation on their shared edge (b,c) inserts a new vertex m at its midpoint and connects the new vertex to each opposing vertex a and d, yielding four triangles. ”</p>
 								</div>
 
 								<div class="grid">
@@ -369,37 +462,37 @@
 								</div>
 
 								<div class="narrative">
-									<p>Part 5 is very similar to part 4; I just need to create a few mesh elements before doing pointer reassignments. There are three parts of my implementation. First, I get a pointer reference of every half-edge, vertex, edge and face element of the two triangles, pre edge split. Then, I create the new elements generated in the split, which are specifically 1 vertex m; 2 faces f2, f3; 3 edges e1, e2, e3; and 6 half edges am, ma, md, dm, mb, bm. At the end, I modify the pointers of each element to appropriate values. To ensure code completeness and that I did not miss anything, I still made an update to the pointers that I believed to remain the same.</p>
-									<p>An implementation trick: drew a detailed graph pre edge split and post edge split, assume that the half-edge pointer of the given edge e0 points to half-edge “bc” (that points from b to c), label EVERY mesh element, and highlight the ones newly created in the operation.</p>
-									<p>Edge case: I check if the edge is on the boundary at the beginning of my implementation, and return immediately if so.</p>
+									<p class="regular-text">Part 5 is very similar to part 4; I just need to create a few mesh elements before doing pointer reassignments. There are three parts of my implementation. First, I get a pointer reference of every half-edge, vertex, edge and face element of the two triangles, pre edge split. Then, I create the new elements generated in the split, which are specifically 1 vertex m; 2 faces f2, f3; 3 edges e1, e2, e3; and 6 half edges am, ma, md, dm, mb, bm. At the end, I modify the pointers of each element to appropriate values. To ensure code completeness and that I did not miss anything, I still made an update to the pointers that I believed to remain the same.</p>
+									<p class="regular-text">An implementation trick: drew a detailed graph pre edge split and post edge split, assume that the half-edge pointer of the given edge e0 points to half-edge “bc” (that points from b to c), label EVERY mesh element, and highlight the ones newly created in the operation.</p>
+									<p class="regular-text">Edge case: I check if the edge is on the boundary at the beginning of my implementation, and return immediately if so.</p>
 								</div>
 
 								<div class="gallery-container">
                      <div class="grid">
                          <div class="inline-image">
                             <img src="images/part5/0_split_before.png" width=90%>
-														<p>icosahedron before edge split</p>
+														<p class="footnote">icosahedron before edge split</p>
                          </div>
                          <div class="inline-image">
                             <img src="images/part5/2_before.png" width=90%>
-														<p>torus before edge split</p>
+														<p class="footnote">torus before edge split</p>
                          </div>
 
                     </div>
                     <div class="grid">
                         <div class="inline-image">
                             <img src="images/part5/0_split_after.png" width=90%>
-														<p>icosahedron after edge split</p>
+														<p class="footnote">icosahedron after edge split</p>
                         </div>
                         <div class="inline-image">
                             <img src="images/part5/2_split.png" width=90%>
-														<p>torus after edge split</p>
+														<p class="footnote">torus after edge split</p>
                         </div>
                     </div>
                 </div>
 
 								<div class="narrative">
-									<p>Before and after a combination of both edge splits and edge flips:</p>
+									<p class="regular-text">Before and after a combination of both edge splits and edge flips:</p>
 								</div>
 
 
@@ -407,63 +500,63 @@
                      <div class="grid">
                          <div class="inline-image">
                             <img src="images/part5/1_before.png" width=100%>
-														<p>cube.dae</p>
+														<p class="footnote">cube.dae</p>
                          </div>
                          <div class="inline-image">
                             <img src="images/part5/1_split.png" width=100%>
-														<p>edge split</p>
+														<p class="footnote">edge split</p>
                          </div>
 												 <div class="inline-image">
                             <img src="images/part5/1_split_flip.png" width=100%>
-														<p>edge split +  flip</p>
+														<p class="footnote">edge split +  flip</p>
                          </div>
                     </div>
                 </div>
 
 								<div class="narrative">
-									<p>After having implemented part 4, part 5 is pretty straightforward and the biggest trouble is just spelling all the mesh elements’ names right because there are so many of them. I drew a “before-and-after” graph, labeled each element before writing any code, maintained a clear and organized code structure, and successfully achieved the expected results on my first attempt.</p>
+									<p class="regular-text">After having implemented part 4, part 5 is pretty straightforward and the biggest trouble is just spelling all the mesh elements’ names right because there are so many of them. I drew a “before-and-after” graph, labeled each element before writing any code, maintained a clear and organized code structure, and successfully achieved the expected results on my first attempt.</p>
 								</div>
 
 
 						</div>
 
 						<div class="part">
-								<h3>Part 6: Loop subdivision for mesh upsampling</h3>
+								<h2 align="middle">Part 6: Loop subdivision for mesh upsampling</h2>
 
 								<div class="narrative">
-									<p>For part 6, I implemented loop subdivision, which is the algorithm for converting a coarse polygon mesh into a higher-resolution one for better display. This technique alleviates the sharp edges and adjusts the irregular vertices so that the mesh in entirety looks more smooth.</p>
-									<p>Theoretically, this algorithm comprised of two parts: subdividing each triangle in the mesh into 4 smaller triangles, and then update vertex positions to be weighted average of their neighboring vertex positions. However, when I actually tried to write it in code, I realized there are in fact three steps needed in the implementation, because for each level of subdivision, both the new vertices’s positions and the edge split midpoints are determined using old vertex positions, therefore I need to precompute and store all the new positions before doing any edge splitting and flipping.</p>
-									<p>There are 3 parts in my implementation: </p>
-									<p>1. compute new positions for all the vertices in the input mesh, and position of the edge split point for all edges, using the Loop subdivision rule.</p>
-									<p>2. Loop through every edge and perform an edge split on the old edges, then loop through every edge again and flip the necessary new edge created in previous work. (there is a pitfall for a new edge case, which will be discussed in my debugging trick)</p>
-									<p>3. Now that we are done with the current level of subdivision, we can finish up by setting every edge to “not new” and update all the old vertices to precomputed new positions.</p>
+									<p class="regular-text">For part 6, I implemented loop subdivision, which is the algorithm for converting a coarse polygon mesh into a higher-resolution one for better display. This technique alleviates the sharp edges and adjusts the irregular vertices so that the mesh in entirety looks more smooth.</p>
+									<p class="regular-text">Theoretically, this algorithm comprised of two parts: subdividing each triangle in the mesh into 4 smaller triangles, and then update vertex positions to be weighted average of their neighboring vertex positions. However, when I actually tried to write it in code, I realized there are in fact three steps needed in the implementation, because for each level of subdivision, both the new vertices’s positions and the edge split midpoints are determined using old vertex positions, therefore I need to precompute and store all the new positions before doing any edge splitting and flipping.</p>
+									<p class="regular-text">There are 3 parts in my implementation: </p>
+									<p class="regular-text">1. compute new positions for all the vertices in the input mesh, and position of the edge split point for all edges, using the Loop subdivision rule.</p>
+									<p class="regular-text">2. Loop through every edge and perform an edge split on the old edges, then loop through every edge again and flip the necessary new edge created in previous work. (there is a pitfall for a new edge case, which will be discussed in my debugging trick)</p>
+									<p class="regular-text">3. Now that we are done with the current level of subdivision, we can finish up by setting every edge to “not new” and update all the old vertices to precomputed new positions.</p>
 								</div>
 
 								<div class="narrative">
-									<p>Results of loop subdivision are shown below.</p>
+									<p class="regular-text">Results of loop subdivision are shown below.</p>
 								</div>
 
 								<div class="gallery-container">
                      <div class="grid">
                          <div class="inline-image">
                             <img src="images/part6/sphere/subdivision_sphere_0.png" width=100% height="200px">
-														<p>level 0</p>
+														<p class="footnote">level 0</p>
                          </div>
                          <div class="inline-image">
                             <img src="images/part6/sphere/subdivision_sphere_1.png" width=100% height="200px">
-														<p>level 1</p>
+														<p class="footnote">level 1</p>
                          </div>
 												 <div class="inline-image">
                             <img src="images/part6/sphere/subdivision_sphere_2.png" width=100% height="200px">
-														<p>level 2</p>
+														<p class="footnote">level 2</p>
                          </div>
 												 <div class="inline-image">
                             <img src="images/part6/sphere/subdivision_sphere_3.png" width=100% height="200px">
-														<p>level 3</p>
+														<p class="footnote">level 3</p>
                          </div>
 												 <div class="inline-image">
                             <img src="images/part6/sphere/subdivision_sphere_4.png" width=100% height="200px">
-														<p>level 4</p>
+														<p class="footnote">level 4</p>
                          </div>
                     </div>
                 </div>
@@ -472,110 +565,110 @@
                      <div class="grid">
                          <div class="inline-image">
                             <img src="images/part6/torus/subdivision_0.png" width=100% height="200px">
-														<p>level 0</p>
+														<p class="footnote">level 0</p>
                          </div>
                          <div class="inline-image">
                             <img src="images/part6/torus/subdivision_1.png" width=100% height="200px">
-														<p>level 1</p>
+														<p class="footnote">level 1</p>
                          </div>
 												 <div class="inline-image">
                             <img src="images/part6/torus/subdivision_2.png" width=100% height="200px">
-														<p>level 2</p>
+														<p class="footnote">level 2</p>
                          </div>
 												 <div class="inline-image">
                             <img src="images/part6/torus/subdivision_3.png" width=100% height="200px">
-														<p>level 3</p>
+														<p class="footnote">level 3</p>
                          </div>
 												 <div class="inline-image">
                             <img src="images/part6/torus/subdivision_4.png" width=100% height="200px">
-														<p>level 4</p>
+														<p class="footnote">level 4</p>
                          </div>
                     </div>
                 </div>
 
 								<div class="narrative">
-									<p>Debugging process:</p>
-									<p>There are many pitfalls in this part. The biggest difficulty I have encountered is how to handle one of the new edges created in edge split when the original edge gets split in two. We should not split it anymore because it is a new edge, but we also should not flip it even if it connects an old vertex with new vertex because it is part of the black edges, not the dotted ones. Therefore it’s tricky whether we should set its “isNew” value to true or false.</p>
-									<p>The initial results I got when I didn’t know:</p>
+									<p class="regular-text">Debugging process:</p>
+									<p class="regular-text">There are many pitfalls in this part. The biggest difficulty I have encountered is how to handle one of the new edges created in edge split when the original edge gets split in two. We should not split it anymore because it is a new edge, but we also should not flip it even if it connects an old vertex with new vertex because it is part of the black edges, not the dotted ones. Therefore it’s tricky whether we should set its “isNew” value to true or false.</p>
+									<p class="regular-text">The initial results I got when I didn’t know:</p>
 								</div>
 
 
                <div class="grid">
                    <div class="inline-image">
                       <img src="images/part6/debug/debug.jpeg" width=100% >
-											<p>ugly screenshot</p>
+											<p class="footnote">ugly screenshot</p>
                    </div>
               </div>
 
 
 
 								<div class="narrative">
-									<p>My debugging trick is to comment out all other parts except edge split and edge flip, which narrowed down my search. This allowed me to quickly pinpoint the problem. </p>
-									<p>There are many ways to solve this problem. My fix is to set those tricky edges to “isNew = false” so that edge flip works as intended. When doing edge split, I perform an extra check to not only see if the edge is old, but also whether both connected vertices are old vertices. This prevents edge split from having an infinite loop.</p>
+									<p class="regular-text">My debugging trick is to comment out all other parts except edge split and edge flip, which narrowed down my search. This allowed me to quickly pinpoint the problem. </p>
+									<p class="regular-text">There are many ways to solve this problem. My fix is to set those tricky edges to “isNew = false” so that edge flip works as intended. When doing edge split, I perform an extra check to not only see if the edge is old, but also whether both connected vertices are old vertices. This prevents edge split from having an infinite loop.</p>
 
 								</div>
 
 								<div class="narrative">
-									<p>it is clear to see that the sharp corner and edges are getting smoothed during the process, and after doing some level of loop subdivision, they become an even surface (as demonstrated by the results shown below). The sharp corners and edges are lost. </p>
-									<p>However, we can do some edge split in advance to preserve some of those shapes:</p>
+									<p class="regular-text">it is clear to see that the sharp corner and edges are getting smoothed during the process, and after doing some level of loop subdivision, they become an even surface (as demonstrated by the results shown below). The sharp corners and edges are lost. </p>
+									<p class="regular-text">However, we can do some edge split in advance to preserve some of those shapes:</p>
 								</div>
 
 								<div class="gallery-container">
                      <div class="grid">
                          <div class="inline-image">
                             <img src="images/part6/preedgesplit/sphere/pre_edgesplit_sphere_0.png" width=100% height="270px">
-														<p>Original Mesh</p>
+														<p class="footnote">Original Mesh</p>
                          </div>
                          <div class="inline-image">
                             <img src="images/part6/preedgesplit/sphere/pre_edgesplit_sphere_1.png" width=100% height="270px">
-														<p>Pre Edge Split</p>
+														<p class="footnote">Pre Edge Split</p>
                          </div>
 												 <div class="inline-image">
                             <img src="images/part6/preedgesplit/sphere/pre_edgesplit_sphere_2.png" width=100% height="270px">
-														<p>Subdivision</p>
+														<p class="footnote">Subdivision</p>
                          </div>
 											</div>
 											<div class="grid">
 													<div class="inline-image">
 														 <img src="images/part6/preedgesplit/torus/pre_edgesplit_torus_0.png" width=100% height="270px">
-														 <p>Original Mesh</p>
+														 <p class="footnote">Original Mesh</p>
 													</div>
 													<div class="inline-image">
 														 <img src="images/part6/preedgesplit/torus/pre_edgesplit_torus_1.png" width=100% height="270px">
-														 <p>Pre Edge Split</p>
+														 <p class="footnote">Pre Edge Split</p>
 													</div>
 													<div class="inline-image">
 														 <img src="images/part6/preedgesplit/torus/pre_edgesplit_torus_2.png" width=100% height="270px">
-														 <p>Subdivision</p>
+														 <p class="footnote">Subdivision</p>
 													</div>
                     </div>
                 </div>
 
 								<div class="narrative">
-									<p>For dae/cube.dae, the original mesh is a symmetric cube, but the sube becomes slightly asymmetric after repeated subdivisions due to its asymmetric initial edge split, as shown below.</p>
+									<p class="regular-text">For dae/cube.dae, the original mesh is a symmetric cube, but the sube becomes slightly asymmetric after repeated subdivisions due to its asymmetric initial edge split, as shown below.</p>
 								</div>
 
 								<div class="gallery-container">
                      <div class="grid">
                          <div class="inline-image">
                             <img src="images/part6/cube/subdivision_cube_0.png" width=100% height="200px">
-														<p>level 0</p>
+														<p class="footnote">level 0</p>
                          </div>
                          <div class="inline-image">
                             <img src="images/part6/cube/subdivision_cube_1.png" width=100% height="200px">
-														<p>level 1</p>
+														<p class="footnote">level 1</p>
                          </div>
 												 <div class="inline-image">
                             <img src="images/part6/cube/subdivision_cube_2.png" width=100% height="200px">
-														<p>level 2</p>
+														<p class="footnote">level 2</p>
                          </div>
 												 <div class="inline-image">
                             <img src="images/part6/cube/subdivision_cube_3.png" width=100% height="200px">
-														<p>level 3</p>
+														<p class="footnote">level 3</p>
                          </div>
 												 <div class="inline-image">
                             <img src="images/part6/cube/subdivision_cube_4.png" width=100% height="200px">
-														<p>level 4</p>
+														<p class="footnote">level 4</p>
                          </div>
                     </div>
                 </div>
@@ -583,7 +676,7 @@
 
 
 								<div class="narrative">
-									<p>Originally, each side of the cube is divided into two triangles, with the division pointing at the same direction on each side. The initial split is one-sided to some extent, therefore resulting in a tilting result after many level of subdivisions. To correct the asymmetric effect, I pre-processed the cube: split each side one more time to create a symmetric initial division, as shown below. </p>
+									<p class="regular-text">Originally, each side of the cube is divided into two triangles, with the division pointing at the same direction on each side. The initial split is one-sided to some extent, therefore resulting in a tilting result after many level of subdivisions. To correct the asymmetric effect, I pre-processed the cube: split each side one more time to create a symmetric initial division, as shown below. </p>
 								</div>
 
 
@@ -591,11 +684,11 @@
                      <div class="grid">
                          <div class="inline-image">
                             <img src="images/part6/preedgesplit/cube/pre_edgesplit_cube_0.png" width=100% height="270px">
-														<p>Original Mesh</p>
+														<p class="footnote">Original Mesh</p>
                          </div>
                          <div class="inline-image">
                             <img src="images/part6/preedgesplit/cube/pre_edgesplit_cube_1.png" width=100% height="270px">
-														<p>Pre-prossessing</p>
+														<p class="footnote">Pre-prossessing</p>
                          </div>
 										</div>
 										<div class="grid">
@@ -617,7 +710,7 @@
 
 
 								<div class="narrative">
-									<p>With edge-split pre-processing, the result becomes an even and symmetric cube.</p>
+									<p class="regular-text">With edge-split pre-processing, the result becomes an even and symmetric cube.</p>
 								</div>
 
 						</div>

@@ -5,14 +5,12 @@
 
 
 
-@import url('https://fonts.googleapis.com/css2?family=Poiret+One&display=swap');
 
-    .four{
+    /* .four{
       padding:30px;
     }
 
     *{
-        /* font-family: 'Quicksand', sans-serif; */
         font-family: 'Poiret One', cursive;
 
     }
@@ -22,12 +20,9 @@
     margin: auto;
     text-align: left;
     font-weight: 300;
-    /* font-family: 'Open Sans', sans-serif; */
     color: #121212;
   }
   h1, h2, h3, h4 {
-    /* font-family: 'Source Sans Pro', sans-serif; */
-    /* font-family: "Courier New", Courier, monospace; */
     font-size: 40px;
   }
   h1, h2 {
@@ -38,9 +33,100 @@
   }
   p{
     padding:20px;
-    /* font-family: 'Shadows Into Light', cursive; */
     font-size:20px;
-  }
+  } */
+  @import url('https://fonts.googleapis.com/css2?family=Cuprum&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Advent+Pro:wght@100&family=Cuprum&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Advent+Pro:wght@100&family=Cuprum&family=Gochi+Hand&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Advent+Pro:wght@100&family=Cuprum&family=Gochi+Hand&family=Raleway:wght@100&display=swap');
+
+    .four{
+      padding:30px;
+    }
+    *{
+        font-family: 'Raleway', sans-serif;
+    }
+    body {
+      padding-top: 100px;
+      padding-bottom: 100px;
+      text-align: left;
+      font-weight: 100;
+      font-size: 5;
+      color: #121212;
+    }
+    /* texts */
+    h1, h2 {
+      font-size: 40px;
+    }
+    h1, h2 {
+      padding: 20px;
+    }
+    h3, h4 {
+      padding: 30px;
+    }
+    .regular-text {
+      padding-left: 100px;
+      padding-right: 100px;
+      padding-top:20px;
+      padding-bottom: 20px;
+      line-height: 2;
+      font-size:17px;
+    }
+    .list{
+      line-height:2;
+      margin-left: 70px;
+      margin-right: 70px;
+      padding-left: 100px;
+      padding-right: 100px;
+      font-size:17px;
+    }
+    .footnote {
+      padding-bottom:20px;
+      font-size: 14px;
+    }
+    /* images */
+    .gallery {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 80px;
+      margin-bottom: 80px;
+    }
+    .small-gallery-container {
+        margin-top: 40px;
+        margin-bottom: 30px;
+    }
+    .large-gallery-container {
+      margin-top: 50px;
+      margin-bottom: 50px;
+    }
+    .grid {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .inline-image {
+      width: 33.3%;
+      text-align: center;
+    }
+    .inline-image-4 {
+      width: 25%;
+      text-align: center;
+    }
+    .inline-image-5 {
+      width: 20%;
+      text-align: center;
+    }
+    .image-container {
+      width: 40%;
+      text-align: center;
+      align-content: center;
+    }
+    .lecture {
+      margin-left: 100px;
+      margin-right: 20px;
+      text-align: center;
+    }
 </style>
 <title>CS 184 Rasterizer</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
@@ -50,23 +136,25 @@
 
 <body>
 
+<h1 align="middle">Rasterizer</h1>
 <h1 align="middle">CS 184: Computer Graphics and Imaging, Spring 2022</h1>
-<h1 align="middle">Project 1: Rasterizer</h1>
-<p align="middle">"In this assignment you will implement a simple rasterizer, including features like drawing triangles, supersampling, hierarchical transforms, and texture mapping with antialiasing."</p>
-<img src="images/cover.jpeg" width="100%" height=300px>
-<p align="middle">Sara Wang, CS184-abe</p>
+<p align="middle">"In this project I implemented a simple rasterizer, including features like drawing triangles, supersampling, hierarchical transforms, and texture mapping with antialiasing."</p>
+<div class="large-gallery-container">
+  <img src="images/cover.jpeg" width="100%" height=300px>
+</div>
+<p align="middle">Sara Wang</p>
 
 <br><br>
 
 <div>
 
 <h2 align="middle">Overview</h2>
-<p>In this project, I have the opportunity to learn and fully implement how to render
+<p class="regular-text" >In this project, I have the opportunity to learn and fully implement how to render
   images on a screen. Apart from the basics of how to rasterize a point, a line and a
    triangle, I also implemented various advanced methods of samplings which greatly
    suppressed unwanted visual effects and improved the quality of the rasterization.
 </p>
-<p>What I found interesting is that images, smallest color unit being a pixel, can
+<p class="regular-text" >What I found interesting is that images, smallest color unit being a pixel, can
   be rendered as if it is construed with units smaller than pixels. For example, in
   supersampling, a point is divided into 1, 4, 9, 16 etc. “sub-pixels” and visited
   accordingly, it is as if a higher resolution version of the image getting downsampled
@@ -78,14 +166,14 @@
 
 <h2 align="middle">Section I: Rasterization</h2>
 
-<h3 align="middle">Part 1: Rasterizing single-color triangles</h3>
+<h2 align="middle">Part 1: Rasterizing single-color triangles</h2>
 
-<p>In task 1, I implemented the method for rasterizing triangles.
+<p class="regular-text" >In task 1, I implemented the method for rasterizing triangles.
 My approach is to first construct a bounding box for each triangle: find the minimum and the maximum values of x, y coordinates of the vertices, and only loop through the coordinates inside the box.
 While looping through each pixel within the box, I wrote a helper function that, given the input of a point (x, y) and the coordinates of three triangle vertices, determines whether or not the point is located within the triangle.
 </p>
 <img src="images/screenshots/task1/task1lecture.png" align="middle" width="100%">
-<p>The algorithm for my insideTriangle() helper function is the one elaborated in lecture: if a point P is above / on the line that spans from P0 to P1, the dot product of the vector P0 to P with P0 to P1’s (-dy, dx) line normal vector is >= zero. For the case where vector P0 to P is towards positive x directions, it being above the line means P is inside the triangle; for the case where it points to negative x directions, P is inside the triangle when below the line. Luckily, in either cases (counterclockwise winding orders), the equation evaluates to an output >= zero when the point is inside the triangle. Therefore for counterclockwise winding orders, we determine that a point is inside the triangle when the dot product is >= zero for all three edge.
+<p class="regular-text" >The algorithm for my insideTriangle() helper function is the one elaborated in lecture: if a point P is above / on the line that spans from P0 to P1, the dot product of the vector P0 to P with P0 to P1’s (-dy, dx) line normal vector is >= zero. For the case where vector P0 to P is towards positive x directions, it being above the line means P is inside the triangle; for the case where it points to negative x directions, P is inside the triangle when below the line. Luckily, in either cases (counterclockwise winding orders), the equation evaluates to an output >= zero when the point is inside the triangle. Therefore for counterclockwise winding orders, we determine that a point is inside the triangle when the dot product is >= zero for all three edge.
 For clockwise winding order, we determine that a point is inside the triangle when the dot product is <= zero for all three edge.
 </p>
 
@@ -116,7 +204,7 @@ For clockwise winding order, we determine that a point is inside the triangle wh
   </table>
 </div>
 
-<p>In particular, I captured two interesting details of test4.svg. </p>
+<p class="regular-text" >In particular, I captured two interesting details of test4.svg. </p>
 <div align="middle">
   <table style="width=100%">
     <tr>
@@ -132,18 +220,18 @@ For clockwise winding order, we determine that a point is inside the triangle wh
   </table>
 </div>
 
-<p>My algorithm is no worse than one that checks each sample within the bounding box because I only loop through the pixels within the bounding box, and not bother to process the rest of the pixels outside the area.
+<p class="regular-text" >My algorithm is no worse than one that checks each sample within the bounding box because I only loop through the pixels within the bounding box, and not bother to process the rest of the pixels outside the area.
 </p>
 
 
-<h3 align="middle">Part 2: Antialiasing triangles</h3>
+<h2 align="middle">Part 2: Antialiasing triangles</h2>
 
-<p>For task 2, I used supersampling to antialias my triangles. Supersampling is dividing each pixel into sqrt(sample_rate) * sqrt(sample_rate) sub-pixels and sample at each sub-pixels. The improvement is that each pixel value is no longer just one color but the average of all sub-pixels’ colors. It useful because it smoothes the edges and prevents jaggies.
+<p class="regular-text" >For task 2, I used supersampling to antialias my triangles. Supersampling is dividing each pixel into sqrt(sample_rate) * sqrt(sample_rate) sub-pixels and sample at each sub-pixels. The improvement is that each pixel value is no longer just one color but the average of all sub-pixels’ colors. It useful because it smoothes the edges and prevents jaggies.
 </p>
-<p>Sample_buffer (1d vector) is resized to to sample_rate times larger the original size because I need to store the color data for each sub-pixel.
+<p class="regular-text" >Sample_buffer (1d vector) is resized to to sample_rate times larger the original size because I need to store the color data for each sub-pixel.
 The fill_pixel method is modified, instead of filling each pixel, I fill each sub-pixel.
 </p>
-<p>rasterize_triangle is also rewritten. Inside each pixel, I wrote a nested FOR LOOP to determine whether each sub-pixel is inside the given triangle.
+<p class="regular-text" >rasterize_triangle is also rewritten. Inside each pixel, I wrote a nested FOR LOOP to determine whether each sub-pixel is inside the given triangle.
 In the resolve_to_framebuffer step, I fill the target frame buffer pixels from the supersample buffer data by computing the average color value for all the sub-pixels within a pixel.</p>
 
 
@@ -173,13 +261,13 @@ In the resolve_to_framebuffer step, I fill the target frame buffer pixels from t
   </table>
 </div>
 
-<p>The results of task 2 is shown above. The edges are no longer shaped like staircases because the pixels where part of them is outside the shape will be given an intermediate color, which smoothes the visuals of the edges.
+<p class="regular-text" >The results of task 2 is shown above. The edges are no longer shaped like staircases because the pixels where part of them is outside the shape will be given an intermediate color, which smoothes the visuals of the edges.
 </p>
 
 
-<h3 align="middle">Part 3: Transforms</h3>
+<h2 align="middle">Part 3: Transforms</h2>
 
-<p>For task 3, we are allowed to redesign the gesture of the robot. In my version, I made cube-man looks like his is waving in the middle of a run.
+<p class="regular-text" >For task 3, we are allowed to redesign the gesture of the robot. In my version, I made cube-man looks like his is waving in the middle of a run.
 </p>
 
 <div align="middle">
@@ -198,26 +286,26 @@ In the resolve_to_framebuffer step, I fill the target frame buffer pixels from t
 </div>
 
 
-<p>I added rotate() transform to every limb of the cube-man, and find the optimal angle to turn each cube, which is a body part, to my desired direction, before making tiny modifications in the translate transform to make it look natural.
+<p class="regular-text" >I added rotate() transform to every limb of the cube-man, and find the optimal angle to turn each cube, which is a body part, to my desired direction, before making tiny modifications in the translate transform to make it look natural.
 </p>
 <p>After creating the running + waving cube-man, I recolored him to a blue color, but each limb a different shades of blue, so that the entire body, from left to right, has a gradient color light blue to dark blue
 </p>
 
 <h2 align="middle">Section II: Sampling</h2>
 
-<h3 align="middle">Part 4: Barycentric coordinates</h3>
+<h2 align="middle">Part 4: Barycentric coordinates</h2>
 <div class="four">
 <img src="images/screenshots/task4/task4lecture.png" width="100%">
 </div>
 
-<p>Barycentric coordinates is a coordinate system that is used to describe a point’s position within  a triangle, with references of proximity to each vertices. It is in the form of (alpha, beta, gamma) with alpha + beta + gamma = 1. We can compute the rendering attributes of a point within a triangle by calculating the weighted average of those of each vertex.
+<p class="regular-text" >Barycentric coordinates is a coordinate system that is used to describe a point’s position within  a triangle, with references of proximity to each vertices. It is in the form of (alpha, beta, gamma) with alpha + beta + gamma = 1. We can compute the rendering attributes of a point within a triangle by calculating the weighted average of those of each vertex.
 </p>
 
 <div align="middle">
     <img src="images/screenshots/task4/task4test7.png" align="middle" width="400px"/>
     <figcaption align="middle">test7.svg</figcaption>
 </div>
-<p>To illustrate this with an example, I created an SVG file of a triangle whose vertices are positioned (100, 0), (0, 200), (200, 200) with color red, blue, green respectively. The smoothly blended color triangle constructed using barycentric coordinates is shown below.
+<p class="regular-text" >To illustrate this with an example, I created an SVG file of a triangle whose vertices are positioned (100, 0), (0, 200), (200, 200) with color red, blue, green respectively. The smoothly blended color triangle constructed using barycentric coordinates is shown below.
 </p>
 <div align="middle">
     <img src="images/screenshots/task4/task4triangle.png" align="middle" width="400px"/>
@@ -225,8 +313,8 @@ In the resolve_to_framebuffer step, I fill the target frame buffer pixels from t
 </div>
 
 
-<h3 align="middle">Part 5: "Pixel sampling" for texture mapping</h3>
-<p>The method of Pixel sampling is that for each pixel in the screen space, we find a suitable corresponding pixel in the texture space, get the texture color and map its color data to the screen space.
+<h2 align="middle">Part 5: "Pixel sampling" for texture mapping</h2>
+<p class="regular-text" >The method of Pixel sampling is that for each pixel in the screen space, we find a suitable corresponding pixel in the texture space, get the texture color and map its color data to the screen space.
 In regards to determining the texel coordinates for a screen pixel, barycentric coordinates system is helpful because it is preserved from screen space to texture space. For a point inside a triangle, I first calculate, in screen space, its barycentric coordinates in regards to the triangle vertices. Then the coordinates in the texture space can be determined by computing a weighted average of the corresponding triangle vertices’ coordinates.
 Now that we have determined texture space coordinates, which are float values, there are two methods to determine exactly which texel (texel indexes, which are integer values) we want to sample colors from.
 </p>
@@ -244,10 +332,10 @@ Now that we have determined texture space coordinates, which are float values, t
     </tr>
   </table>
 </div>
-<p>
+<p class="regular-text" >
   The method of nearest sampling is that for a point in the texture space, we choose to sample the texel whose center is the closest to our desired position.
 </p>
-<p>
+<p class="regular-text" >
   The method of Bilinear sampling is that for a point in the texture space, we find its 2*2 neighbor texels, as shown below.
   First calculate the linearly interpolated colors in the horizontal direction for each row (based on the point’s horizontal position in regards to the coordinates of the center of the neighbor texels in the same row).
   Using the two interpolated colors from the previous step, I am able to compute, in the vertical direction, a linearly interpolated color of all four texture pixels.
@@ -279,27 +367,27 @@ Now that we have determined texture space coordinates, which are float values, t
   </table>
 </div>
 
-<p>The results of bilinear sampling look more blurry than those of nearest sampling.
+<p class="regular-text" >The results of bilinear sampling look more blurry than those of nearest sampling.
   Distinguishable visual effects tend to occur when there is a sharp edge. The reason is that nearest sampling method does not
   handle a sudden change of color very well because it forces a pixel to inherit the color of a nearest neighbor, whereas bilinear
   sampling method computes a nicely interpolated color for the pixel on the "edge" and creates a smooth transition of different colors.
 </p>
 
-<h3 align="middle">Part 6: "Level sampling" with mipmaps for texture mapping</h3>
+<h2 align="middle">Part 6: "Level sampling" with mipmaps for texture mapping</h2>
 
-<p>What is level sampling?<br>
+<p class="regular-text" >What is level sampling?<br>
 The scene we want to render might contain both objects that are far away and ones that are close to the screen. When we sample pixel colors from texture space to the screen space, we can use mipmaps for better texture mapping accuracy, so that objects at different distances are textured with texels from different “resolution”.
 </p>
 
-<p>For level sampling, we keep downsampling the texture image and store all of the downsampled versions in a pyramid-like mipmap, with full-resolution image at level 0. For an object with small screen footprint, we sample from low resolution texture; for an object with large screen footprint, we sample from high resolution texture. This technique effectively reduces antialiasing for objects that are far away from the camera.
+<p class="regular-text" >For level sampling, we keep downsampling the texture image and store all of the downsampled versions in a pyramid-like mipmap, with full-resolution image at level 0. For an object with small screen footprint, we sample from low resolution texture; for an object with large screen footprint, we sample from high resolution texture. This technique effectively reduces antialiasing for objects that are far away from the camera.
 </p>
 
-<p>In my implementation, I first calculate the appropriate mipmap level for each screen pixel to sample from. In order to do that, I select two reference point (x+1, y) and (x, y+1) for point (x, y) and calculate their corresponding coordinates in the texture space using barycentric coordinates. Using the relative distances of the three points in texture space to screen space, I am able to calculate the appropriate level using the mathematics covered in class.
+<p class="regular-text" >In my implementation, I first calculate the appropriate mipmap level for each screen pixel to sample from. In order to do that, I select two reference point (x+1, y) and (x, y+1) for point (x, y) and calculate their corresponding coordinates in the texture space using barycentric coordinates. Using the relative distances of the three points in texture space to screen space, I am able to calculate the appropriate level using the mathematics covered in class.
 </p>
 
 <img src="images/screenshots/task6/task6lecture.png" align="middle" width="100%">
 
-<p>The result of the computation for mipmap level is a floating point, therefore we need to apply specific method to determine from which level to sample. Nearest level sampling is choosing the level closest to our floating point result, whereas bilinear level sampling is choosing both the upper and lower levels and compute an interpolated value.
+<p class="regular-text" >The result of the computation for mipmap level is a floating point, therefore we need to apply specific method to determine from which level to sample. Nearest level sampling is choosing the level closest to our floating point result, whereas bilinear level sampling is choosing both the upper and lower levels and compute an interpolated value.
 </p>
 
 
@@ -308,7 +396,7 @@ The scene we want to render might contain both objects that are far away and one
 </div>
 
 
-<p>The below images illustrate the different results using different level sampling methods, on my self-selected image. </p>
+<p class="regular-text" >The below images illustrate the different results using different level sampling methods, on my self-selected image. </p>
 
 
 <div class="four" align="middle">
@@ -337,7 +425,7 @@ The scene we want to render might contain both objects that are far away and one
   </table>
 </div>
 
-<p>We have now implemented supersampling and different techniques of pixel sampling and level sampling.
+<p class="regular-text" >I have now implemented supersampling and different techniques of pixel sampling and level sampling.
   <br>
    Precomputing various texture resolution levels, linearly interpolating texel
    values from neighboring pixels/mipmap levels, taking multiple samples per pixel
@@ -356,11 +444,6 @@ they allow for a pixel to not just be an "absolute, rounded data" but rather an 
 interpolated value smoothly metamorphosed from neighbor pixels.
 </p>
 <br>
-
-<h2 align="middle">Section III: Art Competition</h2>
-<p>If you are not participating in the optional art competition, don't worry about this section!</p>
-
-<h3 align="middle">Part 7: Draw something interesting!</h3>
 
 </body>
 </html>

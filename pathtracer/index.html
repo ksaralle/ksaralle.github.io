@@ -116,15 +116,15 @@
 
 
 <body>
+<h1 align="middle">PathTracer</h1>
 <h1 align="middle">CS 184: Computer Graphics and Imaging, Spring 2022</h1>
-  <h1 align="middle">Project 3-1: PathTracer</h1>
-<p class="regular-text" align="middle">"By the time you are done, you'll be able to generate some realistic pictures (given enough patience and CPU time). You will also have the chance to extend the assignment in many technically challenging and intellectually stimulating directions."</p>
+<p class="regular-text" align="middle">"techiques of generating realistic pictures (given enough patience and CPU time). Features implemented in this project can be extended in many technically challenging and intellectually stimulating directions."</p>
 <div class="gallery">
   <img src="images/part3/hemisphere-sampling/debug.png" width=100%>
   <img src="images/part3/hemisphere-sampling/debug.png" width=100%>
   <img src="images/part3/hemisphere-sampling/debug.png" width=100%>
 </div>
-<p  class="regular-text" align="middle">Sara Wang, CS184-abe</p>
+<p  class="regular-text" align="middle">Sara Wang</p>
 
 <br><br>
 
@@ -543,5 +543,196 @@ In the sample rate graph below, we use red and blue colors to represent high and
     </div>
   </div>
 </div>
+
+
+
+<h2 align="middle">Part VI: Microfacet Material</h2>
+<p class="regular-text" >In part 6, I implemented the BSDF computations of the Microfacet models, the implementation of the properties enables me to calculate the irradiance of microfacet surfaces and simulate these objects’s reflections under given lightings.
+</p>
+<p class="regular-text" >Microfacet materials is a special model that on a micro scale has many tiny facets and looks like a bumpy surface, but overall on a macro scale has a specular reflection that resembles a perfect mirror. A good example would be that we can see a mirror-like reflection of sunlight of the Australia continent when viewing from an outer space zoomed out point of view, when we clearly know that the continent has trees, architectures, lakes, and numerous “bumpy” facets on the surface.
+</p>
+<p class="regular-text" >I implemented the BRDF evaluation function as follows, Where F is the fresnel term, G is the shadowing-masking term, and D is the normal distribution function NDF.
+</p>
+<div class="small-gallary-container">
+  <div class="grid">
+    <img src="images/part6/math/brdf.png" width=30%>
+  </div>
+</div>
+<h3 align="middle">< Fresnel Term ></h3>
+<p class="regular-text" >Specifically, the fresnel term (for air-conductor materials like gold, silver, e.t.) is calculated as follows, Where eta and k are refraction indices, the values are different for materials at different wavelengths, such as gold, silver, bronze etc. The eta and k values are contained in the given .dae files to distinguish surface  materials.
+</p>
+<div class="small-gallary-container">
+  <div class="grid">
+    <img src="images/part6/math/fresnel.png" width=30%>
+  </div>
+</div>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/part6/material/bunny/gold.png" width="90%">
+        <p class="footnote">Gold, Au</p>
+    </div>
+    <div class="image-container">
+        <img src="images/part6/material/bunny/silver.png" width="90%">
+        <p class="footnote">Silver, Ag</p>
+    </div>
+    <div class="image-container">
+        <img src="images/part6/material/bunny/titanium.png" width="90%">
+        <p class="footnote">Titanium, Ti</p>
+    </div>
+  </div>
+</div>
+ <p class="regular-text" >Here shows some images with CBdragon_microfacet_au.dae and CBbunny_microfacet_cu.dae in other conductor materials. This is
+ done by replacing the eta and k attributes in the dae files.</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/part6/material/dragon/gold.png" width="90%">
+        <p class="footnote">Gold, Au</p>
+    </div>
+    <div class="image-container">
+        <img src="images/part6/material/dragon/silver.png" width="90%">
+        <p class="footnote">Silver, Ag</p>
+    </div>
+    <div class="image-container">
+        <img src="images/part6/material/dragon/titanium.png" width="90%">
+        <p class="footnote">Titanium, Ti</p>
+    </div>
+  </div>
+</div>
+<h3 align="middle">< Normal Distribution Function ></h3>
+<p class="regular-text" >The shadowing-masking term implementation is given in the starter code. The Normal Distribution Function is computed as follows:
+</p>
+<div class="small-gallary-container">
+  <div class="grid">
+    <img src="images/part6/math/ndf.png" width=25%>
+  </div>
+</div>
+<p class="regular-text" >The NDF defines how the Microfacets' normals are distributed, where alpha defines the roughness of the surface. The value alpha is given is an attribute given in the .dae file.
+   As shown in the results below, the larger the alpha value, the more the object has as sense of coarse look. As alpha decreases, the surfaces look more fine grained, glossy and delicate, and resembles more like mirror materials.
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="inline-image-4">
+      <img src="images/part6/alpha/0.5.png" width=100% height=300px>
+      <p class="footnote">alpha = 0.5</p>
+      <p class="footnote">[-s 128, -l 1, -m 5]</p>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part6/alpha/0.25.png" width=100% height=300px>
+      <p class="footnote">alpha = 0.25</p>
+      <p class="footnote">[-s 128, -l 1, -m 5]</p>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part6/alpha/0.05.png" width=100% height=300px>
+      <p class="footnote">alpha = 0.05</p>
+      <p class="footnote">[-s 128, -l 1, -m 5]</p>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part6/alpha/0.005.png" width=100% height=300px>
+      <p class="footnote">alpha = 0.005</p>
+      <p class="footnote">[-s 128, -l 1, -m 5]</p>
+    </div>
+  </div>
+</div>
+<h3 align="middle">< Importance Sampling ></h3>
+<p class="regular-text" >Since we are adopting Beckmann distribution for the NDF, uniform sampling of BRDF is not good enough to describe the illumination. Therefore in task 4, I implemented the method of importance sampling of the microfacet BRDF according to the shape of the Beckmann NDF.
+</p>
+<p class="regular-text" >To adopt importance sampling, I first randomly generate two values r1 and r2 uniformly distributed within [0,1). Use the random numbers to compute angle theta and phi:
+</p>
+<div class="small-gallary-container">
+  <div class="grid">
+    <img src="images/part6/math/angles.png" width=25%>
+  </div>
+</div>
+<p class="regular-text" >Using the values of theta and phi, compute the pair of pdfs p_theta and  p_phi.
+</p>
+<p class="regular-text" >Afterwards, convert the pdfs of sampling theta and phi to pdfs of sampling solid angle wi, using the equations below:
+</p>
+<div class="small-gallary-container">
+  <div class="grid">
+    <img src="images/part6/math/pdf.png" width=50%>
+  </div>
+</div>
+<p class="regular-text" >The starter code provide a default implementation of uniform cosine hemisphere sampling method. However, clear comparison shows that it inefficient and contains a lot of noise with the same amount of samples, as illustrated below.
+</p>
+<div class="small-gallery-container">
+  <div class="grid">
+    <div class="image-container">
+        <img src="images/part6/sampling/uniform.png" width="90%">
+        <p class="footnote">cosine hemisphere sampling</p>
+        <p class="footnote">[-s 64, -l 1, -m 5]</p>
+    </div>
+    <div class="image-container">
+        <img src="images/part6/sampling/importance.png" width="90%">
+        <p class="footnote">importance sampling</p>
+        <p class="footnote">[-s 64, -l 1, -m 5]</p>
+    </div>
+  </div>
+</div>
+
+
+
+
+<h2 align="middle">Part VII: Depth of Field</h2>
+<p class="regular-text" >In part 7, I implemented the simulation of thin lens rendering effects that captures different depth of fields.
+</p>
+<p class="regular-text" >In previous sections, I have been dealing with ideal pin hold camera models where all rays emitted from the camera pass through the pin hole and land on an object. In this case, everything in the scene is in focus.
+</p>
+<p class="regular-text" >In the thin lens model, we assume that there is a finite aperture (lensRadius), therefore objects are only in focus if they are within a certain distance (focalDistance) from the lens.
+</p>
+<div class="small-gallary-container">
+  <div class="grid">
+    <img src="images/part7/math/lens.png" width=50%>
+  </div>
+</div>
+<p class="regular-text" >
+  In camera space, the image plane is at z=1, the thin lens is at z=0, and the plane of focus is at z=-focalDistance. Based on the model shown above, I first calculate the red ray’s origin (already given) and direction (using the method from project3-1) and construct the red ray. Then, I compute the intersection point of the red ray and plane of focus, calling it pFocus. Uniformly sample a point pLens on the thin lens using the given equation. Then construct the blue ray, which originates from pLens and reaches pFocus. The blue ray is what we will return in this task.
+</p>
+<p class="regular-text" >[-b] term controls the lens radius, [-d] term controls the focal distance. First, I use a fixed lens radius (-b 0.3) and varies the focal distance to see the effects of focusing at visibly different depths through a scene.
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="inline-image-4">
+      <img src="images/part7/depth/b0.3d4.2.png" width=100% height=300px>
+      <p class="footnote">[-b 0.3, -d 4.2]</p>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part7/depth/b0.3d4.4.png" width=100% height=300px>
+      <p class="footnote">[-b 0.3, -d 4.4]</p>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part7/depth/b0.3d4.6.png" width=100% height=300px>
+      <p class="footnote">[-b 0.3, -d 4.6]</p>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part7/depth/b0.3d4.8.png" width=100% height=300px>
+      <p class="footnote">[-b 0.3, -d 4.8]</p>
+    </div>
+  </div>
+</div>
+<p class="regular-text" >After that, I focused them all at the same point in a scene (-d 4.5), but changes the lens radius. The effects are shown below:
+</p>
+<div class="large-gallery-container">
+  <div class="grid">
+    <div class="inline-image-4">
+      <img src="images/part7/aperture/b0.1d4.5.png" width=100% height=300px>
+      <p class="footnote">[-b 0.1, -d 4.5]</p>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part7/aperture/b0.25d4.5.png" width=100% height=300px>
+      <p class="footnote">[-b 0.25, -d 4.5]</p>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part7/aperture/b0.5d4.5.png" width=100% height=300px>
+      <p class="footnote">[-b 0.5, -d 4.5]</p>
+    </div>
+    <div class="inline-image-4">
+      <img src="images/part7/aperture/b1.0d4.5.png" width=100% height=300px>
+      <p class="footnote">[-b 1.0, -d 4.5]</p>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

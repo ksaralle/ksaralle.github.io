@@ -1,20 +1,19 @@
 <!DOCTYPE html>
-<html> 
-    <head> 
+<html>
+    <head>
         <title>cs194project3</title>
         <style>
-            *{
+            /* *{
                 font-family: "Courier New", Courier, monospace;
             }
             .heading {
                 margin-top: 80px;
                 margin-bottom: 80px;
                 text-align: center;
-            } 
+            }
             .content{
                 margin-top: 50px;
                 margin-bottom: 50px;
-                
             }
             .part {
                 text-align: center;
@@ -49,23 +48,117 @@
                 padding-left: 20px;
                 padding-right: 20px;
             }
-            
+
             .narrative {
                 padding-left: 100px;
                 padding-right: 100px;
                 padding-top: 10px;
                 padding-bottom: 10px;
                 line-height: 150%;
-            }
-            
-            
+            } */
+
+            @import url('https://fonts.googleapis.com/css2?family=Cuprum&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Advent+Pro:wght@100&family=Cuprum&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Advent+Pro:wght@100&family=Cuprum&family=Gochi+Hand&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Advent+Pro:wght@100&family=Cuprum&family=Gochi+Hand&family=Raleway:wght@100&display=swap');
+
+              .four{
+                padding:30px;
+              }
+              *{
+                  font-family: 'Raleway', sans-serif;
+              }
+              body {
+                padding-top: 100px;
+                padding-bottom: 100px;
+                text-align: left;
+                font-weight: 100;
+                font-size: 5;
+                color: #121212;
+              }
+              /* texts */
+              h1, h2 {
+                font-size: 40px;
+              }
+              h1, h2 {
+                padding: 20px;
+              }
+              h3, h4 {
+                padding: 30px;
+              }
+              .regular-text {
+                padding-left: 100px;
+                padding-right: 100px;
+                padding-top:20px;
+                padding-bottom: 20px;
+                line-height: 2;
+                font-size:17px;
+              }
+              .list{
+                line-height:2;
+                margin-left: 70px;
+                margin-right: 70px;
+                padding-left: 100px;
+                padding-right: 100px;
+                font-size:17px;
+              }
+              .footnote {
+                padding-bottom:20px;
+                font-size: 14px;
+              }
+              /* images */
+              .gallery {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-top: 80px;
+                margin-bottom: 80px;
+              }
+              .small-gallery-container {
+                  margin-top: 40px;
+                  margin-bottom: 30px;
+              }
+              .large-gallery-container {
+                margin-top: 50px;
+                margin-bottom: 50px;
+              }
+              .grid {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              }
+              .inline-image {
+                width: 33.3%;
+                text-align: center;
+              }
+              .inline-image-4 {
+                width: 25%;
+                text-align: center;
+              }
+              .inline-image-5 {
+                width: 20%;
+                text-align: center;
+              }
+              .image-container {
+                width: 40%;
+                text-align: center;
+                align-content: center;
+              }
+              .lecture {
+                margin-left: 100px;
+                margin-right: 20px;
+                text-align: center;
+              }
+
+
         </style>
     </head>
     <body>
         <div class="heading">
-        <h2>CompSci 194 - Face Morphing</h2> 
-            
-        <p>"A morph is a simultaneous warp of the image shape and a cross-dissolve of the image colors. "</p>
+        <h2 align="middle">Face Morphing</h2>
+        <h2 align="middle">CompSci 194</h2>
+
+        <p align="middle">"A morph is a simultaneous warp of the image shape and a cross-dissolve of the image colors. "</p>
             <div class="gallery">
                     <div class="inline-image">
                         <img src="input/damon.jpg" width="100%">
@@ -81,32 +174,31 @@
                     </div>
                 </div>
         </div>
-        
+
         <div class="content">
             <div class="part">
-                <h3>Computing the "Mid-way Face"</h3>
+                <h3 align="middle">Computing the "Mid-way Face"</h3>
                 <div class="narrative">
-                    <p>To start the whole morphing process, I start by creating a mid-way face. First, a correspondence is established between the faces in two images:  by manually selecting a set of points from the same locations of eyes, nose, mouth, cheek bones etc. from image 1 and image 2, I have a mapping of important facial features between the two faces. (as shown in the figure below)</p>
+                    <p class="regular-text">To start the whole morphing process, I start by creating a mid-way face. First, a correspondence is established between the faces in two images:  by manually selecting a set of points from the same locations of eyes, nose, mouth, cheek bones etc. from image 1 and image 2, I have a mapping of important facial features between the two faces. (as shown in the figure below)</p>
                 </div>
                 <div class="grid">
-                    
-                    <div class="image">
-                        <img src="output/sara_points.jpg">
-                        <p>Points - 1</p>
+                    <div class="inline-image">
+                        <img src="output/sara_points.jpg" width="100%">
+                        <p class="footnote">Points - 1</p>
                     </div>
-                    <div class="image">
-                        <img src="output/billie_points.jpg">
-                        <p>Points - 2</p>
+                    <div class="inline-image">
+                        <img src="output/billie_points.jpg" width="100%">
+                        <p class="footnote">Points - 2</p>
                     </div>
                 </div>
-                
+
                  <div class="narrative">
-                    <p>Next, I calculate the average over the 2 sets of points -- a set of mid-way points. Compute Delaunay Triangulation over the mid-way points.  </p>
-                    <p>Using image 1 points, image 2 points and the Delaunay triangulation, I compute the affine transformation matrices between the image 1 triangle vertices' coordinates and image 2 triangle vertices' coordinates, of each triangle. Note that the affine transformation is computed for the inverse warping operation of transforming points from their positions on image 2 to corresponding spots on image 1. </p>
-                     <p>With warp fraction = 0.5, cross-dissolve fraction = 0.5 (since we are generating the mid-way image): </p>
+                    <p class="regular-text">Next, I calculate the average over the 2 sets of points -- a set of mid-way points. Compute Delaunay Triangulation over the mid-way points.  </p>
+                    <p class="regular-text">Using image 1 points, image 2 points and the Delaunay triangulation, I compute the affine transformation matrices between the image 1 triangle vertices' coordinates and image 2 triangle vertices' coordinates, of each triangle. Note that the affine transformation is computed for the inverse warping operation of transforming points from their positions on image 2 to corresponding spots on image 1. </p>
+                    <p class="regular-text">With warp fraction = 0.5, cross-dissolve fraction = 0.5 (since we are generating the mid-way image): </p>
                 </div>
-                
-            
+
+
                 <div class="gallery">
                     <div class="inline-image">
                         <img src="input/sara_resize.jpg" width="100%">
@@ -121,14 +213,14 @@
                         <p>Sara + Billie</p>
                     </div>
                 </div>
-                
+
             </div>
-            
+
             <div class="part">
-                <h3>The morph Sequence</h3>
+                <h3 align="middle">The morph Sequence</h3>
                 <div class="narrative">
-                    <p>Setting the warp fraction and cross-dissolve fraction over (in my case) the range [1,0], I store the resulting intermediate images at each frame into a GIF file, with frame count = 45, fps = 30.</p>
-                    <p>On the right is an experimentation I did using George Clooney and Matt Damon's photos. frame count = 30.</p>
+                    <p class="regular-text">Setting the warp fraction and cross-dissolve fraction over (in my case) the range [1,0], I store the resulting intermediate images at each frame into a GIF file, with frame count = 45, fps = 30.</p>
+                    <p class="regular-text">On the right is an experimentation I did using George Clooney and Matt Damon's photos. frame count = 30.</p>
                 </div>
                 <div class="gallery">
                     <div class="image">
@@ -140,17 +232,17 @@
                         <p>Damon -> George</p>
                     </div>
                 </div>
-                
+
             </div>
-            
+
             <div class="part">
-                <h3>The "Mean face" of a population</h3>
+                <h3 align="middle">The "Mean face" of a population</h3>
              <!-- original images -->
-                
-                
+
+
                 <div class="gallery-container">
                     <div class="narrative">
-                        <p>For this part, my source images are - 37 images from the Danish Faces Dataset with pre-selected points.</p>
+                        <p class="regular-text">For this part, my source images are - 37 images from the Danish Faces Dataset with pre-selected points.</p>
                     </div>
                     <div class="grid">
                         <div class="inline-image">
@@ -174,7 +266,7 @@
                             <img src="input/data/13-1m.jpg" width="100%">
                         </div>
                     </div>
-                    <p>Original Images</p>
+                    <p class="regular-text">Original Images</p>
                 </div>
              <!-- morphed images -->
                 <div class="gallery-container">
@@ -200,13 +292,13 @@
                             <img src="output/data/morphed_5.jpg" width="100%">
                         </div>
                     </div>
-                    <p>Faces morphed into the average shape.</p>
+                    <p class="regular-text">Faces morphed into the average shape.</p>
                 </div>
-                
+
                 <div class="narrative">
-                    <p>Step 1: Parse the asf files, get the provided data points from the Danish Faces dataset. There are 58 annotated points for each image. The (x, y) coordinates are provided and Data points are nicely ordered. (Left Figure below)  </p>
+                    <p class="regular-text">Step 1: Parse the asf files, get the provided data points from the Danish Faces dataset. There are 58 annotated points for each image. The (x, y) coordinates are provided and Data points are nicely ordered. (Left Figure below)  </p>
                 </div>
-                
+
                 <div class="grid">
                     <div class="image">
                         <img src="output/mean_face_points.jpg" width="100%">
@@ -217,11 +309,12 @@
                         <p>Delaunay triangulation computed on the mean set of points</p>
                     </div>
                 </div>
-                
+
+
                 <div class="narrative">
-                    <p>Step 2: Compute the average shape of all Danish Faces, by averaging over all sets of data points in the given data set. The resulting image of the average data points is the mean shape of the population. (shown in figure below) Over the average data points, generate Delaunay triangulation (shown in the right figure above), which is used for all morph processes later. </p>
+                    <p class="regular-text">Step 2: Compute the average shape of all Danish Faces, by averaging over all sets of data points in the given data set. The resulting image of the average data points is the mean shape of the population. (shown in figure below) Over the average data points, generate Delaunay triangulation (shown in the right figure above), which is used for all morph processes later. </p>
                 </div>
-                
+
                 <div class="smaller-gallery-container">
                     <div class="grid">
                         <div class="image">
@@ -230,12 +323,12 @@
                         </div>
                     </div>
                 </div>
-                
-                
+
+
                 <div class="narrative">
-                    <p>Step 3: Morph all Danish faces into the average face shape generated above (warp fraction = 0, cross-dissolve fraction = 1). Then compute the average of all morphed Danish faces. The resulting image is the average face of the population. </p>
+                    <p class="regular-text">Step 3: Morph all Danish faces into the average face shape generated above (warp fraction = 0, cross-dissolve fraction = 1). Then compute the average of all morphed Danish faces. The resulting image is the average face of the population. </p>
                 </div>
-                
+
                 <div class="smaller-gallery-container">
                     <div class="grid">
                         <div class="image">
@@ -244,33 +337,33 @@
                         </div>
                     </div>
                 </div>
-                
+
                  <div class="gallery-container">
                      <div class="narrative">
-                        <p>Shown below: 1) My face warped into the average geometry, and 2) the average face warped into my geometry.</p>
+                        <p class="regular-text">Shown below: 1) My face warped into the average geometry, and 2) the average face warped into my geometry.</p>
                      </div>
                      <div class="grid">
                          <div class="image">
                             <img src="output/my_face_to_avg_face.jpg">
-                            <p>"my face warped into the average geometry"</p>
+                            <p class="footnote">"my face warped into the average geometry"</p>
                         </div>
                          <div class="image">
                             <img src="output/avg_face_to_my_face.jpg">
-                            <p>"the average face warped into my geometry."</p>
+                            <p class="footnote">"the average face warped into my geometry."</p>
                         </div>
                      </div>
                 </div>
-                
+
             </div>
-            
+
             <div class="part">
-                <h3>Caricatures: Extrapolating from the mean</h3>
-                
+                <h3 align="middle">Caricatures: Extrapolating from the mean</h3>
+
                 <div class="narrative">
-                    <p>Caricatures are produced by extrapolating from the population mean: take the difference between the average face of Danish population (computed in previous part) and my face, multiplied by a factor (alpha α), before adding back to my face. </p>
-                    <p>e.g. alpha = 1.2, P + 1.2(Q-P), -0.2P + 1.2Q</p>
+                    <p class="regular-text">Caricatures are produced by extrapolating from the population mean: take the difference between the average face of Danish population (computed in previous part) and my face, multiplied by a factor (alpha α), before adding back to my face. </p>
+                    <p class="regular-text">e.g. alpha = 1.2, P + 1.2(Q-P), -0.2P + 1.2Q</p>
                 </div>
-            
+
                 <div class="gallery">
                         <div class="inline-image">
                             <img src="output/caricature'-1.0'.jpg" width="100%">
@@ -286,17 +379,17 @@
                         </div>
                 </div>
             </div>
-            
+
             <div class="part">
-                <h3>Bells and Whistles: Change the gender/ethnicity of my face</h3>
-                
+                <h3 align="middle">Bells and Whistles: Change the gender/ethnicity of my face</h3>
+
                 <div class="narrative">
-                    <p>"Change age/gender/ethnicity/smile/etc of your (or your friend's) face. You can use average images off the web for this, no need to recompute the averages yourself (unless you want to). Show morphing just the shape, just the appearance, and both."
+                    <p class="regular-text">"Change age/gender/ethnicity/smile/etc of your (or your friend's) face. You can use average images off the web for this, no need to recompute the averages yourself (unless you want to). Show morphing just the shape, just the appearance, and both."
                     </p>
                 </div>
-            
+
                 <div class="gallery-container">
-                    <h5>- Average face of populations -</h5>
+                    <h5 align="middle">Average face of populations</h5>
                      <div class="grid">
                          <div class="inline-image2">
                             <img src="input/ethnicity/englishman.jpg" width="100%">
@@ -323,8 +416,8 @@
                             <p>spanishfemale</p>
                         </div>
                     </div>
-                    
-                    <h5>- Morphed shape -</h5>
+
+                    <h5 align="middle">Morphed shape</h5>
                     <div class="grid">
                          <div class="inline-image2">
                             <img src="output/ethnicity/morphed_shape_englishman.jpg" width="100%">
@@ -351,8 +444,8 @@
                             <p>spanishfemale</p>
                         </div>
                     </div>
-                    
-                    <h5>- Morphed appearance -</h5>
+
+                    <h5 align="middle">Morphed appearance</h5>
                     <div class="grid">
                          <div class="inline-image2">
                             <img src="output/ethnicity/morphed_appearance_englishman.jpg" width="100%">
@@ -379,8 +472,8 @@
                             <p>spanishfemale</p>
                         </div>
                     </div>
-                    
-                    <h5>- Morphed both shape and appearance -</h5>
+
+                    <h5 align="middle">Morphed both shape and appearance</h5>
                     <div class="grid">
                          <div class="inline-image2">
                             <img src="output/ethnicity/morphed_both_englishman.jpg" width="100%">
@@ -410,7 +503,7 @@
                 </div>
             </div>
         </div>
-        
-        
+
+
     </body>
 </html>
